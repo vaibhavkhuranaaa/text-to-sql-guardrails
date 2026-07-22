@@ -2,70 +2,86 @@
   "version": 2,
   "slug": "text-to-sql-guardrails",
   "title": "Text-to-SQL Interface with Guardrails and Hallucination Detection",
-  "summary": "Pending verified implementation.",
-  "outcome": "Pending verified implementation.",
+  "summary": "Private local-first prototype that demonstrates deterministic text-to-SQL validation over a synthetic payments fixture.",
+  "outcome": "Supported questions return transparent trusted verdicts; unsupported, malformed, unsafe, and hallucinated schema references are refused before execution.",
   "industries": [
-    "Pending classification"
+    "Financial services"
   ],
   "categories": [
     "AI/ML"
   ],
   "stack": [
-    "Pending verification"
+    "Python",
+    "FastAPI",
+    "DuckDB",
+    "SQLGlot",
+    "OpenTelemetry"
   ],
-  "githubUrl": "https://github.com/OWNER/text-to-sql-guardrails",
+  "githubUrl": null,
   "liveUrl": null,
   "deployment": {
-    "provider": "Pending approval",
-    "status": "release-pending",
-    "runtime": "Pending verification"
+    "provider": "Local Docker Compose",
+    "status": "not deployed",
+    "runtime": "FastAPI with in-memory-style local DuckDB workflow"
   },
   "metrics": [
-    "Pending verified evaluation"
+    "100% execution accuracy across 4 expected trusted local evaluation cases",
+    "100% safety-rejection rate across 4 unsafe/malformed/schema-violation cases",
+    "100% hallucination-detection rate across unknown-table and unknown-column cases",
+    "$0 local execution cost"
   ],
   "stages": [
-    "Scaffold"
+    "Private initial delivery",
+    "Local verification complete"
   ],
   "architecture": [
-    "Approved source",
-    "Validated processing",
-    "Evaluated outcome"
+    "Typed API and CLI",
+    "Deterministic SQL catalog",
+    "Parser-backed validation",
+    "Read-only DuckDB execution"
   ],
   "evaluation": [
-    "Pending evaluation plan"
+    "Committed local evaluation report generated from the synthetic fixture"
   ],
   "operationalTradeoffs": [
-    "Pending architecture decision"
+    "Exact-match catalog favors predictable safety over flexible language coverage",
+    "Azure Bicep is future, non-applied infrastructure only"
   ],
-  "disclaimer": "Uses synthetic, public, or otherwise permitted data only; pending verified implementation.",
+  "disclaimer": "Uses a hand-authored synthetic demo fixture only; not real bank or cardholder data, not deployed, and not production-ready.",
+  "assets": [
+    "portfolio/assets/system.png"
+  ],
   "story": {
-    "executiveSummary": "Pending verified implementation.",
-    "intendedUser": "Pending project discovery.",
+    "executiveSummary": "A transparent, bounded text-to-SQL guardrails demonstration with measured local safety behavior.",
+    "intendedUser": "An analyst reviewing a constrained payments-data workflow.",
     "example": {
       "title": "Representative workflow",
       "steps": [
-        "Provide approved input",
-        "Inspect the result"
+        "Ask an exact supported payments question",
+        "Inspect generated SQL, validation checks, and a preview",
+        "See unsupported or unsafe requests refused"
       ]
     },
     "technologyDecisions": [
       {
-        "technology": "Pending verification",
-        "rationale": "Selected after project discovery.",
-        "alternative": "Pending comparison",
-        "tradeoff": "Pending evidence."
+        "technology": "Deterministic catalog plus SQLGlot",
+        "rationale": "Makes supported behavior and pre-execution SQL policy testable locally.",
+        "alternative": "Unbounded model-generated SQL",
+        "tradeoff": "Limited natural-language coverage by design."
       }
     ],
     "evidence": [
       {
-        "value": "Pending",
-        "label": "verification",
-        "context": "Not yet published.",
-        "method": "Evaluation plan pending."
+        "value": "100%",
+        "label": "local safety rejection",
+        "context": "4 unsafe, malformed, or unknown-schema cases.",
+        "method": "Generated evaluation/report.json from committed fixture."
       }
     ],
     "limitations": [
-      "Not yet reviewed or deployed."
+      "Exact catalog matching only; unsupported questions are refused.",
+      "Local synthetic fixture only; no real financial data.",
+      "No Azure resources are provisioned or deployed."
     ]
   }
 }

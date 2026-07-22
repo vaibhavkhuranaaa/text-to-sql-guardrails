@@ -1,4 +1,9 @@
 flowchart LR
-  A[Approved source] --> B[Validated processing]
-  B --> C[Evaluated outcome]
-  C --> D[Safe demo]
+  Analyst[Analyst: exact catalog question] --> API[FastAPI /v1/query]
+  API --> Generator[Deterministic intent-to-SQL catalog]
+  Generator -->|unsupported| Refusal[Refused verdict]
+  Generator --> Validator[SQL guardrails]
+  Validator -->|single SELECT; allowed schema; EXPLAIN; LIMIT 100| DuckDB[(Local DuckDB fixture)]
+  Validator -->|invalid / hallucinated| Refusal
+  DuckDB --> Verdict[Trusted verdict: SQL, checks, preview]
+  API --> Telemetry[OpenTelemetry span + structured fields]

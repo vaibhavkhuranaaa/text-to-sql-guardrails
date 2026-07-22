@@ -1,0 +1,13 @@
+{
+  "customers": [
+    {"customer_id": "C001", "country": "Kenya", "segment": "consumer"},
+    {"customer_id": "C002", "country": "Uganda", "segment": "merchant"},
+    {"customer_id": "C003", "country": "Kenya", "segment": "consumer"}
+  ],
+  "payments": [
+    {"payment_id": "P001", "customer_id": "C001", "payment_date": "2024-01-01", "amount_usd": 12.50, "status": "completed", "channel": "mobile_money"},
+    {"payment_id": "P002", "customer_id": "C002", "payment_date": "2024-01-01", "amount_usd": 20.00, "status": "completed", "channel": "mobile_money"},
+    {"payment_id": "P003", "customer_id": "C001", "payment_date": "2024-01-02", "amount_usd": 5.25, "status": "failed", "channel": "mobile_money"},
+    {"payment_id": "P004", "customer_id": "C003", "payment_date": "2024-01-02", "amount_usd": 8.75, "status": "completed", "channel": "mobile_money"}
+  ]
+}
