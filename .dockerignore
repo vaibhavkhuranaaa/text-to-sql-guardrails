@@ -1,0 +1,12 @@
+.git/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+graphify-out/
+.env
+.env.*
+data/Raw/
+data/raw/
+benchmarks/
+*.sqlite3

@@ -1,0 +1,14 @@
+{
+  "dataset": "MoMTSim V2 synthetic mobile-money transaction dataset",
+  "doi": "10.17632/zhj366m53p.2",
+  "version": 2,
+  "published_date": "2024-10-29",
+  "license": "CC BY 4.0",
+  "landing_page": "https://data.mendeley.com/datasets/zhj366m53p/2",
+  "metadata_api": "https://data.mendeley.com/public-api/datasets/zhj366m53p/versions/2",
+  "files": [
+    {"name": "MoMTSim_20240722202413_1000_dataset.csv", "sha256": "99fd07c3a9d3c4bd6d3462240058ca19d0d9e9284683f78bf77542ff7fcc05e7"},
+    {"name": "synthetic_mobile_money_transaction_dataset.csv", "sha256": "da951eb95735da96271740a3e66b676b342d3831ce3111cd19dbfa020d3bd0a7"}
+  ],
+  "checksum_policy": "An owner must record source-file SHA-256 values in the approved release lock before a snapshot may be published. Null is intentionally not a checksum assertion."
+}

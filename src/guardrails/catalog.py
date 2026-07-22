@@ -25,6 +25,16 @@ SUPPORTED_QUESTIONS = (
         "Show daily completed payment totals.",
         "SELECT payment_date, ROUND(SUM(amount_usd), 2) AS total_amount_usd FROM fact_payments WHERE status = 'completed' GROUP BY payment_date ORDER BY payment_date",
     ),
+    SupportedQuestion(
+        "completed_payments_by_segment",
+        "Show completed payments by customer segment.",
+        "SELECT c.segment, COUNT(*) AS payment_count, ROUND(SUM(p.amount_usd), 2) AS total_amount_usd FROM fact_payments AS p JOIN dim_customer AS c ON p.customer_id = c.customer_id WHERE p.status = 'completed' GROUP BY c.segment ORDER BY total_amount_usd DESC",
+    ),
+    SupportedQuestion(
+        "payments_by_channel",
+        "Show payment counts by channel.",
+        "SELECT channel, COUNT(*) AS payment_count, ROUND(SUM(amount_usd), 2) AS total_amount_usd FROM fact_payments GROUP BY channel ORDER BY total_amount_usd DESC",
+    ),
 )
 
 

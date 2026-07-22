@@ -2,7 +2,7 @@
   "version": 2,
   "slug": "text-to-sql-guardrails",
   "title": "Text-to-SQL Interface with Guardrails and Hallucination Detection",
-  "summary": "Private local-first prototype that demonstrates deterministic text-to-SQL validation over a synthetic payments fixture.",
+  "summary": "Private local-first analyst console that demonstrates deterministic text-to-SQL validation and an approval-gated synthetic-data snapshot workflow.",
   "outcome": "Supported questions return transparent trusted verdicts; unsupported, malformed, unsafe, and hallucinated schema references are refused before execution.",
   "industries": [
     "Financial services"
@@ -22,7 +22,7 @@
   "deployment": {
     "provider": "Local Docker Compose",
     "status": "not deployed",
-    "runtime": "FastAPI with in-memory-style local DuckDB workflow"
+    "runtime": "FastAPI with read-only local DuckDB snapshot or explicit demo-fixture fallback"
   },
   "metrics": [
     "100% execution accuracy across 4 expected trusted local evaluation cases",
@@ -38,7 +38,8 @@
     "Typed API and CLI",
     "Deterministic SQL catalog",
     "Parser-backed validation",
-    "Read-only DuckDB execution"
+    "Read-only DuckDB execution",
+    "Owner-approved snapshot release gate"
   ],
   "evaluation": [
     "Committed local evaluation report generated from the synthetic fixture"
@@ -80,6 +81,7 @@
     ],
     "limitations": [
       "Exact catalog matching only; unsupported questions are refused.",
+      "No full-source snapshot is committed; source hashes require owner verification before fetch.",
       "Local synthetic fixture only; no real financial data.",
       "No Azure resources are provisioned or deployed."
     ]

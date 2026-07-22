@@ -10,3 +10,10 @@ __pycache__/
 dist/
 build/
 .ruff_cache/
+data/raw/
+data/approved/*.duckdb
+data/approved/*.json
+data/approved/*.csv
+data/approved/*.sqlite3
+!data/approved/.gitkeep
+benchmarks/*.json

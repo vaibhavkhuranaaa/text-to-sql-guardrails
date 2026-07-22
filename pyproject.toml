@@ -4,6 +4,7 @@ version = "0.1.0"
 description = "Local-first text-to-SQL guardrails prototype"
 requires-python = ">=3.11"
 dependencies = [
+  "azure-identity>=1.25,<2",
   "duckdb>=1.1,<2",
   "fastapi>=0.115,<1",
   "opentelemetry-api>=1.28,<2",
