@@ -1,0 +1,8 @@
+name: Validate project
+on: [push, pull_request]
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: test -f docs/STATE.md && test -f docs/HANDOFF.md && test -f architecture/system.mmd && test -f portfolio/project.json

@@ -1,0 +1,71 @@
+{
+  "version": 2,
+  "slug": "text-to-sql-guardrails",
+  "title": "Text-to-SQL Interface with Guardrails and Hallucination Detection",
+  "summary": "Pending verified implementation.",
+  "outcome": "Pending verified implementation.",
+  "industries": [
+    "Pending classification"
+  ],
+  "categories": [
+    "AI/ML"
+  ],
+  "stack": [
+    "Pending verification"
+  ],
+  "githubUrl": "https://github.com/OWNER/text-to-sql-guardrails",
+  "liveUrl": null,
+  "deployment": {
+    "provider": "Pending approval",
+    "status": "release-pending",
+    "runtime": "Pending verification"
+  },
+  "metrics": [
+    "Pending verified evaluation"
+  ],
+  "stages": [
+    "Scaffold"
+  ],
+  "architecture": [
+    "Approved source",
+    "Validated processing",
+    "Evaluated outcome"
+  ],
+  "evaluation": [
+    "Pending evaluation plan"
+  ],
+  "operationalTradeoffs": [
+    "Pending architecture decision"
+  ],
+  "disclaimer": "Uses synthetic, public, or otherwise permitted data only; pending verified implementation.",
+  "story": {
+    "executiveSummary": "Pending verified implementation.",
+    "intendedUser": "Pending project discovery.",
+    "example": {
+      "title": "Representative workflow",
+      "steps": [
+        "Provide approved input",
+        "Inspect the result"
+      ]
+    },
+    "technologyDecisions": [
+      {
+        "technology": "Pending verification",
+        "rationale": "Selected after project discovery.",
+        "alternative": "Pending comparison",
+        "tradeoff": "Pending evidence."
+      }
+    ],
+    "evidence": [
+      {
+        "value": "Pending",
+        "label": "verification",
+        "context": "Not yet published.",
+        "method": "Evaluation plan pending."
+      }
+    ],
+    "limitations": [
+      "Not yet reviewed or deployed."
+    ]
+  }
+}
