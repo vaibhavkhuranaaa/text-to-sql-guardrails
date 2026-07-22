@@ -7,7 +7,8 @@ Continue Text-to-SQL Interface with Guardrails and Hallucination Detection. Read
 ## Current state
 
 - Branch: `feat/text-to-sql-guardrails-initial-delivery`.
-- Implementation is local-only. The initial delivery remains at commit `998145f`; the governed expansion is currently an uncommitted, green worktree change.
+- Governed delivery committed at `5c6e04b`; working tree was clean after removing ambient `.DS_Store` files.
+- Private Azure infrastructure exists in isolated `rg-text-to-sql-guardrails-dev` (East US): ACR, Azure Files proposal store, Log Analytics, and internal-only Container App. Its managed identity has `AcrPull` on the isolated registry and `Cognitive Services OpenAI User` on the shared OpenAI resource. No public ingress or Entra app-auth policy exists yet.
 - Evidence: `evaluation/report.json`, `evaluation/report.md`, `portfolio/assets/system.png`, `data/PROVENANCE.md`.
 - Last checks: verified the MoMTSim source SHA-256, rebuilt the ignored approved snapshot, regenerated benchmark/evaluation evidence (18 fixture cases), `uv run ruff format .`, `uv run ruff check .`, `uv run pytest -q` (25 passed; one upstream Starlette deprecation warning), manifest validation, Docker Compose configuration, and `git diff --check`.
 - Graphify code context refreshed AST-only (49 nodes, 84 edges, 12 communities); documentation semantic extraction was skipped because no provider credential is configured.
