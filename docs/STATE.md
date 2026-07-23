@@ -1,40 +1,52 @@
-# Build state
+# State
 
-## Current goal
+## Independent axes
 
-Deliver a live, interactive governed Text-to-SQL experience with an educational UI, an approved data table view, classified example queries, an explicit limitations/improvements handoff, and enforceable SQL quality/resource controls.
+- Lifecycle: `first-demo`
+- Deployment: `temporary-demo`
+- Exposure: `anonymous`
+- Production claim: `false`
+- Publication: `absent`
+- Contract health: first-demo target `pass`; publication `fail` because no remote/source URL and protected-hosting gates remain open
 
-## Completed
+## Current evidence
 
-- Implemented local FastAPI/CLI, deterministic catalog, SQL validation, read-only DuckDB execution, fixture provenance, evaluation, Docker path, architecture asset, future-only Bicep, and CI checks.
-- Verified locally on 2026-07-22: `uv run ruff format .`, `uv run pytest -q` (8 passed), `uv run ruff check .`, evaluation regeneration, manifest validation, Docker Compose configuration, and `git diff --check`.
-- Evidence: `evaluation/report.json`, `evaluation/report.md`, `portfolio/assets/system.png`, and `data/PROVENANCE.md`.
-- Graphify code context refreshed after implementation: 49 nodes, 84 edges, 12 communities. The ignored graph is AST-only because no semantic-extraction credential is configured.
-- Added v2 Azure Foundry proposal contract, an explicit short-lived approval step, snapshot revalidation, a curated identifier-excluding semantic catalog, and an expanded bounded read-only SQL policy.
-- Added source-release scaffolding: owner checksum gate, ignored raw/snapshot storage, normalization quality checks, environment-gated release workflow, and local benchmark script.
-- Added row-free profiling for both reviewed CSVs, a proposal-review console (scenario cards, proposed read-only SQL, lineage, policy/explain review, explicit approval, preview, and export-disabled boundary), and advanced-policy evaluation cases.
-- Recorded owner-verified V2 source checksums and generated row-free profiles for both files. The profile confirms a shared ten-column source schema; `initiator` and `recipient` are excluded as account identifiers.
-- Built a local approved snapshot from `MoMTSim_20240722202413_1000_dataset.csv`: 4,225,958 transactions, source SHA-256 `99fd07c3a9d3c4bd6d3462240058ca19d0d9e9284683f78bf77542ff7fcc05e7`, and no source identifiers retained. The ignored snapshot metadata and benchmark are generated local evidence.
-- Replaced API-key authentication with Microsoft Entra ID via `DefaultAzureCredential`. Local development uses Azure CLI login; deployed workloads use managed identity. API keys are not accepted by the adapter.
-- Verified the existing owner-controlled Azure OpenAI deployment with Entra ID: a live `gpt-5-mini` proposal was generated and passed policy validation against the approved snapshot. The adapter now uses `/openai/v1/chat/completions`, sends the deployment name as `model`, and omits unsupported `temperature: 0` for GPT-5.
-- An earlier short-lived-process diagnostic could not retain a proposal long enough to approve it; this was superseded by the verified persistent local lifecycle and the later public anonymous lifecycle. No source identifiers, writes, or external data access were used.
-- Replaced process-local proposal state with a SQLite-backed, five-minute, single-use approval store. It persists across requests and can be pointed at an owner-mounted private volume with `GUARDRAILS_PROPOSAL_STORE`; it never stores analyst questions or result rows.
-- Added enforceable local query controls: 512MB DuckDB memory cap, two query threads, no temporary-disk spill, a 100-row preview, and an interrupting three-second execution budget. The runtime was checked directly and reported 488.2 MiB effective memory, two threads, and zero temporary-disk bytes.
-- Added clean console endpoints and UI content for a curated data table, lineage disclosure, and Beginner/Intermediate/Advanced prompt examples. API tests verify that previews exclude `initiator` and `recipient`.
-- Verified a real Microsoft Entra-authenticated Foundry v2 lifecycle in one persistent local server process: a `gpt-5-mini` proposal for transaction counts by transaction type was policy-allowed, explicitly approved once, revalidated, and executed read-only against `fact_transactions`, returning five aggregate rows. This is local integration evidence only; it is not a public URL, deployment, or latency/SLO claim.
-- Corrected the approved snapshot contract to preserve nullable balance fields while requiring simulation step, transaction type, amount, and fraud label. Rebuilt the ignored local snapshot from the re-verified MoMTSim SHA-256 source and expanded evaluation coverage for explicit NULL bucketing plus ranking-with-order acceptance/ranking-without-order refusal.
-- Verified locally on 2026-07-22: re-verified source SHA-256, rebuilt the local 4,225,958-row approved snapshot, regenerated benchmark/evaluation evidence (18 local fixture cases), `uv run ruff format .`, `uv run ruff check .`, `uv run pytest -q` (25 passed; one upstream Starlette deprecation warning), manifest validation, Docker Compose configuration, and `git diff --check`.
+- Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`
+- Revision: `ca-text-sql-guardrails-dev--0000006`
+- Image: `textsqlguardrails278f1d.azurecr.io/text-to-sql-guardrails:20260723-3`
+- Digest: `sha256:9ea98f96e2f23f84d50c148c3699c65205db66a4076e412b0ead001d94923cc7`
+- Status-only verification: `evidence/deployment/temporary-demo.json`, observed `2026-07-23T20:43:49.489473Z`
+- Owner-controlled expiry: `2026-08-06T23:59:59Z`
+- Local policy evaluation: `evaluation/report.json`, 18 of 18 expected outcomes
+- Architecture asset: `portfolio/assets/system.png`; source: `architecture/system.mmd`
+- Data contract: `data/PROVENANCE.md` and `data/source_manifest.json`
 
-- Completed the anonymous portfolio demo deployment on 2026-07-23: image `20260723-3` (digest `sha256:9ea98f96e2f23f84d50c148c3699c65205db66a4076e412b0ead001d94923cc7`) is revision `ca-text-sql-guardrails-dev--0000006` with one replica and 100% traffic. The public root, evaluation, schema-matched examples, safe fixture preview, proposal creation, approved execution, and single-use refusal were verified.
-- Docker now packages runtime evaluation and fixture assets, resolves them from `/app`, serves safe demo-fixture preview rows, and presents payment-schema examples/default prompt when no approved snapshot is present. Proposal-store errors fail closed with a refusal instead of an API 500.
-- The anonymous demo uses `/tmp/text-to-sql-guardrails-proposals.sqlite3`; pending approvals are five-minute, single-use, and lost on restart or revision replacement. Azure Files remains mounted but is not used for SQLite after fresh paths returned `database is locked`.
+## Implemented
 
-- Confirmed on 2026-07-23 that external ingress is enabled for the public URL and no local Uvicorn, Docker, or Azure CLI demo process remains running.
+- FastAPI/CLI, deterministic v1 walkthrough, Azure OpenAI v2 proposals through Microsoft Entra ID, explicit single-use approval, SQLGlot policy, DuckDB EXPLAIN, read-only execution, resource limits, safe previews, and privacy-preserving lifecycle logs.
+- Checksum-pinned synthetic-data profiling/build pipeline that excludes source `initiator` and `recipient` identifiers from approved snapshots.
+- Structured manifest v2 with deployment, disclosure, evidence, stakeholder narrative, limitations, scalability roadmap, and evidence-linked résumé candidates.
+- Source-level anonymous-demo controls: per-client minute limit using a hashed key, per-process proposal budget, expiry refusal, aggregate status counters, and status-only monitoring events.
+- Container boundary: `.dockerignore` excludes raw and approved data; CI builds the image and runs `scripts/verify_container_boundary.py` inside it.
+- Exact-SHA portfolio preview dispatch and owner-gated temporary-demo verification workflow.
 
-## Active branch / PR
+## Current deployment limitations
 
-- `feat/text-to-sql-guardrails-initial-delivery` / not opened
+- Revision `0000006` predates the new rate, process-budget, expiry, and counter code.
+- No caller identity or authorization.
+- Proposal state is SQLite under `/tmp`, single-replica, and restart-sensitive.
+- No production monitoring, alerting, availability evidence, load envelope, or SLO.
+- The locally generated 4,225,958-row approved snapshot is ignored and must never enter the image; the live status reports only the committed demo fixture.
 
-## Next bounded task
+## Repository state
 
-Replace the ephemeral proposal store with an owner-approved transactional service, enable single-tenant Microsoft Entra authentication, verify unauthenticated denial, and add rate limiting/operational evidence before any protected or scaled release. The current public URL is intentionally anonymous and not production-ready.
+- Branch: `feat/text-to-sql-guardrails-initial-delivery`
+- Remote: none
+- Pre-existing unrelated item to preserve: untracked `data/.DS_Store`
+- Graphify: fresh 227-node, 396-edge graph across code and authoritative documentation; source fingerprint stamped at `2026-07-23T20:49:16.984Z`
+
+## Next gate
+
+Local verification is complete: Ruff format/check passed, 29 tests passed with one Starlette deprecation warning, the evaluation and both first-demo manifest validators passed, Docker Compose resolved, `git diff --check` passed, and Graphify is fresh. A local in-image boundary run remains unavailable because this machine has no Docker application/daemon; CI contains the required build-and-inspect proof.
+
+The next separate action is to create a private remote and draft PR through the authorized Git/GitHub stages. That action is currently blocked because the installed GitHub CLI credential for `vaibhavkhuranaaa` is invalid. Publication remains blocked until a replacement deployment proves limits/expiry, authentication and durable storage decisions are resolved, and an exact source SHA is approved by the portfolio registry.

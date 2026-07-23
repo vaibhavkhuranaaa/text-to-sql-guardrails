@@ -12,3 +12,7 @@ jobs:
       - run: uv run python scripts/run_evaluation.py && uv run python scripts/validate_manifest.py
       - run: test -s portfolio/assets/system.png && test -f architecture/system.mmd
       - run: "! rg -n '(AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----)' --glob '!uv.lock' ."
+      - name: Prove approved and raw data are excluded from the image
+        run: |
+          docker build --tag text-to-sql-contract:${GITHUB_SHA} .
+          docker run --rm --entrypoint python text-to-sql-contract:${GITHUB_SHA} /app/scripts/verify_container_boundary.py

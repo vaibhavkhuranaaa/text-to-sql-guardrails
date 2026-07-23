@@ -2,7 +2,7 @@
 
 ## Status
 
-Private, local-first prototype. The backwards-compatible v1 walkthrough uses a deliberately small deterministic catalog. The v2 contract adds Azure Foundry natural-language SQL proposals, analyst approval, and policy revalidation; it is not deployed, not a bank system, and not production-ready.
+First-demo project with a verified, anonymous, temporary Azure Container Apps endpoint. The backwards-compatible v1 walkthrough uses a deliberately small deterministic catalog. The v2 contract adds Azure OpenAI natural-language SQL proposals, analyst approval, and policy revalidation. The endpoint has no caller identity or production claim and expires under owner control on 2026-08-06.
 
 ## One analyst workflow
 
@@ -16,7 +16,7 @@ The first command returns a `trusted` verdict with generated SQL, validation che
 
 `POST /v2/query-proposals` is deliberately separate: it sends the question only to an owner-configured Azure Foundry deployment along with the curated semantic catalog and returns a proposed SQL review package. It never executes SQL. `POST /v2/query-proposals/{id}/execute` needs the short-lived approval token returned with that proposal, then rechecks its policy and snapshot checksum before read-only execution. Pending approvals are SQLite-backed, single-use, and expire after five minutes; they retain SQL/review metadata but never the analyst question or result rows. Locally the store defaults to `/tmp/text-to-sql-guardrails-proposals.sqlite3`; a multi-replica deployment must mount a private writable volume and set `GUARDRAILS_PROPOSAL_STORE` to one shared path. V2 needs `AZURE_FOUNDRY_ENDPOINT`, `AZURE_FOUNDRY_DEPLOYMENT`, and Microsoft Entra ID authorization; locally, authenticate with `az login`, and in Azure use a managed identity. API keys are not used or accepted by this adapter.
 
-Docker path: `docker compose up --build`.
+Docker path: `docker compose up --build`. The image includes the hand-authored fixture and aggregate evaluation but excludes `data/Raw`, `data/raw`, and all `data/approved` artifacts. CI builds the image and verifies that boundary from inside the container.
 
 ## Guardrails
 
@@ -24,8 +24,8 @@ Every candidate query is parsed before execution. The validator permits one boun
 
 ## Approved data release, evidence, and limitations
 
-The fixture at `data/fixtures/payments.json` is a small hand-authored normalized synthetic demo fixture; it does not contain rows downloaded from the source dataset, real customer data, cardholder data, or bank data. Its schema/domain inspiration is disclosed in `data/PROVENANCE.md`. `data/source_manifest.json` pins the public DOI, version, license, filenames, and owner-verified checksums. `uv run guardrails data build --source <reviewed.csv>` accepts only the observed V2 headers and atomically emits an ignored local DuckDB snapshot containing simulation step, transaction type, amount, balance features, and fraud label. Simulation step, type, amount, and fraud label are required; the four balance fields are intentionally nullable and retain source nulls. It excludes source `initiator` and `recipient` values completely and never fabricates a calendar date or transaction identifier.
+The fixture at `data/fixtures/payments.json` is a small hand-authored synthetic demo fixture; it does not contain rows downloaded from the source dataset, real customer data, cardholder data, or bank data. It contains synthetic payment/customer keys only as local join mechanics; those keys are excluded from model context and public previews. Its schema/domain inspiration is disclosed in `data/PROVENANCE.md`. `data/source_manifest.json` pins the public DOI, version, license, filenames, and owner-verified checksums. `uv run guardrails data build --source <reviewed.csv>` accepts only the observed V2 headers and atomically emits an ignored local DuckDB snapshot containing simulation step, transaction type, amount, balance features, and fraud label. It excludes source `initiator` and `recipient` values completely and never fabricates a calendar date or transaction identifier.
 
 The console never downloads or rebuilds data on request. It opens the approved snapshot read-only when present; otherwise it explicitly stays in demo-fixture mode. After the verified sources are fetched, `uv run guardrails data profile --source <csv> --source <csv>` emits a row-free schema/quality profile before curation. The manually dispatched `Approved data release` workflow profiles both named files and can publish snapshot/profile/provenance/benchmark artifacts only after its gates pass.
 
-See `docs/evaluation.md`, `docs/architecture.md`, `docs/deployment.md`, and `portfolio/project.json`. Azure is a non-applied future blueprint only.
+The verified endpoint is `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`. Revision `0000006` predates the newly added per-minute, per-process budget, expiry, and status counters, so these controls are source-verified but not deployment-verified. The deployed proposal store is ephemeral SQLite under `/tmp`; there is no caller authorization, production monitoring, availability evidence, or SLO. See `evidence/deployment/temporary-demo.json`, `docs/deployment.md`, and `portfolio/project.json`.

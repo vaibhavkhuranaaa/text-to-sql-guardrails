@@ -1,13 +1,25 @@
-# AGENTS.md
+# Text-to-SQL Guardrails agent contract
 
-Read `docs/STATE.md`, `docs/HANDOFF.md`, and local Graphify output before broad exploration. Query Graphify for the relevant path first.
+## Authority
 
-Use only permitted data. Do not invent evidence, metrics, URLs, or deployment status. Do not commit secrets or generated dependency directories. Use conventional commits with the configured human identity only; never add AI/model co-author trailers.
+- Current implementation state: `docs/STATE.md`.
+- Continuation instructions: `docs/HANDOFF.md`.
+- Public facts, evidence, deployment classification, and résumé candidates: `portfolio/project.json`.
+- Structured deployment observation: `evidence/deployment/temporary-demo.json`.
+- Dataset source, license, checksums, and classification: `data/PROVENANCE.md` and `data/source_manifest.json`.
+- Generated evaluation: `evaluation/report.json`; source is `scripts/run_evaluation.py`.
 
-At 90% context usage begin a checkpoint. At 95%, stop feature work, update state and handoff, commit/push green work, and preserve any non-green diff precisely in the handoff. Never create a knowingly broken commit.
+## Working rules
 
-## Lean delivery policy
+- Query fresh Graphify output first when it covers the relevant files. The current graph is AST-only and omits documentation; inspect source directly for uncovered work.
+- Preserve the untracked `data/.DS_Store` and any unrelated dirty changes unless the owner separately authorizes removal.
+- Use only permitted synthetic data. Never log or publish raw questions, result rows, tokens, environment values, raw source rows, or source identifiers.
+- Do not invent metrics, URLs, checks, deployment state, or production claims. Every résumé bullet and public metric must resolve to a versioned evidence ID.
+- Use purpose branches and conventional commits with the configured human identity. Never add an AI/model author or co-author.
+- Treat preview, remote creation, push, publication, protected deployment, cloud spending, and teardown as separate actions with their own authority.
+- Delegation is optional and bounded; do not use subagents when coordination costs more than direct work.
+- Use host-reported context/quota signals. Update `docs/STATE.md` and `docs/HANDOFF.md` before a handoff; do not claim automatic percentage detection.
 
-Define the smallest verified vertical slice before writing code. Do not add features, abstractions, dependencies, files, or documentation that do not directly serve the charter, acceptance criteria, deployment, or portfolio evidence.
+## Required checks
 
-The lead may delegate only a bounded, independent research, implementation, testing, or review task with a named deliverable and file scope. Run one worker at a time by default; two are allowed only when their file scopes cannot overlap. Stop and reassess after four worker runs in a milestone. Each worker returns a concise evidence handoff and must not broadly reread the repository.
+Run formatting, lint, tests, evaluation generation, manifest first-demo validation, Docker Compose validation, the container data-boundary check, and `git diff --check`. Publication stays blocked while `githubUrl` is null or the temporary-demo limitations remain unresolved.

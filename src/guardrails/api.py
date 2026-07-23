@@ -3,12 +3,13 @@ import os
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 from .db import policy_schema, prepared_read_only_connection, semantic_catalog, snapshot_status
 from .examples import examples_for_schema
+from .limits import ProposalGate
 from .proposals import create, execute
 from .service import query
 from .ui import CONSOLE_HTML
@@ -16,6 +17,7 @@ from .ui import CONSOLE_HTML
 app = FastAPI(title="Text-to-SQL Guardrails", version="0.1.0")
 ASSET_ROOT = Path(os.getenv("GUARDRAILS_ASSET_ROOT", str(Path(__file__).parents[2])))
 EVALUATION_REPORT = ASSET_ROOT / "evaluation" / "report.json"
+PROPOSAL_GATE = ProposalGate()
 
 
 class QueryRequest(BaseModel):
@@ -49,9 +51,12 @@ def post_query(request: QueryRequest) -> dict:
 
 
 @app.post("/v2/query-proposals")
-def post_query_proposal(request: ProposalRequest) -> dict:
+def post_query_proposal(payload: ProposalRequest, request: Request) -> dict:
     """Generate and validate a proposal. This endpoint never executes SQL."""
-    return create(request.question)
+    decision = PROPOSAL_GATE.check(request.client.host if request.client else None)
+    if not decision.allowed:
+        raise HTTPException(status_code=decision.status_code, detail=decision.reason)
+    return create(payload.question)
 
 
 @app.post("/v2/query-proposals/{proposal_id}/execute")
@@ -120,6 +125,7 @@ def get_status() -> dict:
     return {
         "snapshot": snapshot_status(),
         "policy": "v1 deterministic catalog; v2 Foundry proposals require explicit human approval before read-only execution.",
+        "anonymous_demo_controls": PROPOSAL_GATE.status(),
     }
 
 

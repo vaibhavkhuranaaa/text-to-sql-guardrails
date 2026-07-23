@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 from guardrails.api import app
 from guardrails.catalog import SUPPORTED_QUESTIONS
 from guardrails.db import connect, load_fixture, prepared_read_only_connection, semantic_catalog
+from guardrails.limits import ProposalGate
 from guardrails.pipeline import (
     DataQualityError,
     build_snapshot,
@@ -61,6 +62,8 @@ def test_deployment_bootstrap_contract_and_runtime_assets_are_packaged():
     assert "ENV GUARDRAILS_ASSET_ROOT=/app" in dockerfile
     assert "COPY data ./data" in dockerfile
     assert "COPY evaluation ./evaluation" in dockerfile
+    dockerignore = (Path(__file__).parents[1] / ".dockerignore").read_text(encoding="utf-8")
+    assert "data/approved/" in dockerignore
 
     client = TestClient(app)
     evaluation = client.get("/v1/evaluation")
@@ -69,6 +72,37 @@ def test_deployment_bootstrap_contract_and_runtime_assets_are_packaged():
     assert evaluation.json()["case_count"] >= 1
     assert examples.status_code == 200
     assert examples.json()["examples"]
+
+
+def test_anonymous_demo_gate_enforces_rate_budget_and_expiry(monkeypatch):
+    gate = ProposalGate(proposals_per_minute=1, max_proposals_per_process=2)
+    assert gate.check("203.0.113.10").allowed
+    limited = gate.check("203.0.113.10")
+    assert not limited.allowed
+    assert limited.status_code == 429
+    assert "203.0.113.10" not in str(gate.status())
+
+    budget_gate = ProposalGate(proposals_per_minute=10, max_proposals_per_process=1)
+    assert budget_gate.check("client-a").allowed
+    exhausted = budget_gate.check("client-b")
+    assert not exhausted.allowed
+    assert "budget" in exhausted.reason
+
+    monkeypatch.setattr(
+        "guardrails.limits.datetime",
+        SimpleNamespace(
+            now=lambda _timezone: __import__("datetime").datetime(
+                2026, 8, 7, tzinfo=__import__("datetime").UTC
+            ),
+            fromisoformat=__import__("datetime").datetime.fromisoformat,
+        ),
+    )
+    expired = ProposalGate(
+        proposals_per_minute=1,
+        max_proposals_per_process=1,
+        expires_at="2026-08-06T23:59:59Z",
+    ).check("client")
+    assert expired.status_code == 410
 
 
 def test_educational_examples_and_curated_preview_are_available():

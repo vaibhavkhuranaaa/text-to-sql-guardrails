@@ -1,1 +1,61 @@
-# Add deployment-specific health checks after the deployment target is approved.
+name: Verify temporary demo release
+
+on:
+  workflow_dispatch:
+    inputs:
+      demo_url:
+        description: Exact temporary demo base URL
+        required: true
+        type: string
+      revision:
+        description: Container Apps revision
+        required: true
+        type: string
+      image:
+        description: Immutable image name and tag
+        required: true
+        type: string
+      image_digest:
+        description: Immutable sha256 image digest
+        required: true
+        type: string
+      expires_at:
+        description: Owner-controlled expiry in ISO-8601 UTC
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: text-to-sql-temporary-demo-verification
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    environment: temporary-demo-verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --locked --group dev
+      - run: uv run ruff format --check . && uv run ruff check . && uv run pytest -q
+      - name: Verify container data boundary
+        run: |
+          docker build --tag text-to-sql-release-check:${GITHUB_SHA} .
+          docker run --rm --entrypoint python text-to-sql-release-check:${GITHUB_SHA} /app/scripts/verify_container_boundary.py
+      - name: Verify status-only deployment evidence
+        run: >
+          uv run python scripts/verify_deployment.py
+          --base-url "${{ inputs.demo_url }}"
+          --revision "${{ inputs.revision }}"
+          --image "${{ inputs.image }}"
+          --digest "${{ inputs.image_digest }}"
+          --expires-at "${{ inputs.expires_at }}"
+          --owner "${{ github.actor }}"
+          --out artifacts/temporary-demo-verification.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: text-to-sql-demo-verification-${{ github.sha }}
+          path: artifacts/temporary-demo-verification.json
+          if-no-files-found: error

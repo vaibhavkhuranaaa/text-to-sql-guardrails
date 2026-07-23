@@ -8,5 +8,7 @@ graphify-out/
 .env.*
 data/Raw/
 data/raw/
+data/approved/
+data/.DS_Store
 benchmarks/
 *.sqlite3
