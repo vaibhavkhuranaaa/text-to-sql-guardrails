@@ -41,7 +41,8 @@
 ## Repository state
 
 - Branch: `feat/text-to-sql-guardrails-initial-delivery`
-- Remote: none
+- Remote: private `vaibhavkhuranaaa/text-to-sql-guardrails`
+- Draft PR: `https://github.com/vaibhavkhuranaaa/text-to-sql-guardrails/pull/1`
 - Pre-existing unrelated item to preserve: untracked `data/.DS_Store`
 - Graphify: fresh 227-node, 396-edge graph across code and authoritative documentation; source fingerprint stamped at `2026-07-23T20:49:16.984Z`
 
@@ -49,4 +50,4 @@
 
 Local verification is complete: Ruff format/check passed, 29 tests passed with one Starlette deprecation warning, the evaluation and both first-demo manifest validators passed, Docker Compose resolved, `git diff --check` passed, and Graphify is fresh. A local in-image boundary run remains unavailable because this machine has no Docker application/daemon; CI contains the required build-and-inspect proof.
 
-The next separate action is to create a private remote and draft PR through the authorized Git/GitHub stages. That action is currently blocked because the installed GitHub CLI credential for `vaibhavkhuranaaa` is invalid. Publication remains blocked until a replacement deployment proves limits/expiry, authentication and durable storage decisions are resolved, and an exact source SHA is approved by the portfolio registry.
+The private remote and draft PR now exist. Publication remains blocked until the PR is reviewed, a replacement deployment proves limits/expiry, authentication and durable storage decisions are resolved, an exact-SHA preview passes, and the portfolio registry receives owner approval.

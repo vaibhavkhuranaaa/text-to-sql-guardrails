@@ -31,7 +31,7 @@ The project is a verified anonymous temporary demo, not an undeployed local prot
 - Graphify was regenerated and source-fingerprint stamped.
 - `data/.DS_Store` remains unrelated and untracked.
 - The in-image boundary proof could not run locally because no Docker application/daemon exists; CI now performs it after image construction.
-- Private remote and draft-PR creation are blocked on repairing the invalid GitHub CLI credential. No remote, push, or PR was created.
+- The private remote is `vaibhavkhuranaaa/text-to-sql-guardrails` and draft PR 1 contains the first-demo migration. Keep it draft until checks and owner review complete.
 
 ## Later protected-hosting gate
 

@@ -23,7 +23,7 @@
     "Docker",
     "OpenTelemetry"
   ],
-  "githubUrl": null,
+  "githubUrl": "https://github.com/vaibhavkhuranaaa/text-to-sql-guardrails",
   "liveUrl": "https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io",
   "deployment": {
     "provider": "Azure Container Apps",
