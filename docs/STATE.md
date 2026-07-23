@@ -25,10 +25,14 @@ Deliver a live, interactive governed Text-to-SQL experience with an educational 
 - Corrected the approved snapshot contract to preserve nullable balance fields while requiring simulation step, transaction type, amount, and fraud label. Rebuilt the ignored local snapshot from the re-verified MoMTSim SHA-256 source and expanded evaluation coverage for explicit NULL bucketing plus ranking-with-order acceptance/ranking-without-order refusal.
 - Verified locally on 2026-07-22: re-verified source SHA-256, rebuilt the local 4,225,958-row approved snapshot, regenerated benchmark/evaluation evidence (18 local fixture cases), `uv run ruff format .`, `uv run ruff check .`, `uv run pytest -q` (25 passed; one upstream Starlette deprecation warning), manifest validation, Docker Compose configuration, and `git diff --check`.
 
+- Completed the anonymous portfolio demo deployment on 2026-07-23: image `20260723-3` (digest `sha256:9ea98f96e2f23f84d50c148c3699c65205db66a4076e412b0ead001d94923cc7`) is revision `ca-text-sql-guardrails-dev--0000006` with one replica and 100% traffic. The public root, evaluation, schema-matched examples, safe fixture preview, proposal creation, approved execution, and single-use refusal were verified.
+- Docker now packages runtime evaluation and fixture assets, resolves them from `/app`, serves safe demo-fixture preview rows, and presents payment-schema examples/default prompt when no approved snapshot is present. Proposal-store errors fail closed with a refusal instead of an API 500.
+- The anonymous demo uses `/tmp/text-to-sql-guardrails-proposals.sqlite3`; pending approvals are five-minute, single-use, and lost on restart or revision replacement. Azure Files remains mounted but is not used for SQLite after fresh paths returned `database is locked`.
+
 ## Active branch / PR
 
 - `feat/text-to-sql-guardrails-initial-delivery` / not opened
 
 ## Next bounded task
 
-Mount the provisioned Azure Files store, configure single-tenant Microsoft Entra authentication, and verify unauthenticated denial before enabling public ingress. Do not claim a public live link until that authenticated deployment succeeds.
+Replace the ephemeral proposal store with an owner-approved transactional service, enable single-tenant Microsoft Entra authentication, verify unauthenticated denial, and add rate limiting/operational evidence before any protected or scaled release. The current public URL is intentionally anonymous and not production-ready.

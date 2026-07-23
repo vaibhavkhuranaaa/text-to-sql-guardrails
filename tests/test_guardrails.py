@@ -1,5 +1,7 @@
 import io
 import json
+import sqlite3
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -54,6 +56,21 @@ def test_console_and_snapshot_status_are_visible_without_source_rows():
     assert client.get("/v1/evaluation").json()["case_count"] >= 1
 
 
+def test_deployment_bootstrap_contract_and_runtime_assets_are_packaged():
+    dockerfile = (Path(__file__).parents[1] / "Dockerfile").read_text(encoding="utf-8")
+    assert "ENV GUARDRAILS_ASSET_ROOT=/app" in dockerfile
+    assert "COPY data ./data" in dockerfile
+    assert "COPY evaluation ./evaluation" in dockerfile
+
+    client = TestClient(app)
+    evaluation = client.get("/v1/evaluation")
+    examples = client.get("/v2/examples")
+    assert evaluation.status_code == 200
+    assert evaluation.json()["case_count"] >= 1
+    assert examples.status_code == 200
+    assert examples.json()["examples"]
+
+
 def test_educational_examples_and_curated_preview_are_available():
     client = TestClient(app)
     examples = client.get("/v2/examples").json()
@@ -65,6 +82,22 @@ def test_educational_examples_and_curated_preview_are_available():
     preview = client.get("/v2/data-preview?limit=1").json()
     assert len(preview["rows"]) <= 1
     assert {"initiator", "recipient"}.isdisjoint(preview["columns"])
+
+
+def test_demo_fixture_examples_preview_and_default_prompt_match_active_schema(
+    monkeypatch, tmp_path
+):
+    monkeypatch.setattr("guardrails.db.APPROVED_SNAPSHOT_PATH", tmp_path / "missing.duckdb")
+    monkeypatch.setattr("guardrails.db.SNAPSHOT_METADATA_PATH", tmp_path / "missing.metadata.json")
+
+    client = TestClient(app)
+    examples = client.get("/v2/examples").json()["examples"]
+    preview = client.get("/v2/data-preview?limit=1").json()
+    assert examples[0]["question"] == "Show payment counts by channel."
+    assert preview["state"] == "demo_fixture"
+    assert preview["rows"]
+    assert {"payment_id", "customer_id"}.isdisjoint(preview["columns"])
+    assert "Show payment counts by channel." in client.get("/").text
 
 
 def test_unsupported_question_is_refused():
@@ -310,7 +343,7 @@ def test_foundry_uses_entra_bearer_token_not_api_key(monkeypatch):
     assert captured["request"].get_header("Api-key") is None
 
 
-def test_v2_requires_approval_and_revalidates(monkeypatch, tmp_path):
+def test_deployment_proposal_requires_approval_revalidates_and_is_single_use(monkeypatch, tmp_path):
     from guardrails.foundry import GeneratedProposal
 
     sql, table, referenced_column = _v2_count_sql()
@@ -348,6 +381,29 @@ def test_v2_requires_approval_and_revalidates(monkeypatch, tmp_path):
         json={"approval_token": proposal["approval_token"]},
     ).json()
     assert consumed == {"status": "refused", "reason": "Unknown or already-consumed proposal."}
+
+
+def test_proposal_store_failure_is_refused_not_an_api_error(monkeypatch):
+    from guardrails.foundry import GeneratedProposal
+
+    sql, _table, _column = _v2_count_sql()
+    monkeypatch.setattr(
+        "guardrails.proposals.generate",
+        lambda _question: GeneratedProposal(
+            sql=sql, assumptions=[], model="recorded-contract-test"
+        ),
+    )
+    monkeypatch.setattr(
+        "guardrails.proposals._save",
+        lambda _proposal: (_ for _ in ()).throw(sqlite3.OperationalError("locked")),
+    )
+
+    response = TestClient(app).post(
+        "/v2/query-proposals", json={"question": "Show payment counts by channel."}
+    )
+    assert response.status_code == 200
+    assert response.json()["status"] == "refused"
+    assert "storage" in response.json()["reason"]
 
 
 def test_v2_stale_proposal_is_refused_before_execution(monkeypatch, tmp_path):

@@ -111,6 +111,15 @@ def _snapshot_checksum() -> str:
     return str(snapshot.get("snapshot_sha256") or snapshot.get("sha256"))
 
 
+def _store_refusal(trace_id: str) -> dict:
+    event("proposal_refused", trace_id=trace_id, reason="proposal_store")
+    return {
+        "status": "refused",
+        "trace_id": trace_id,
+        "reason": "Proposal approval storage is temporarily unavailable; no SQL was executed.",
+    }
+
+
 def create(question: str) -> dict:
     trace_id = uuid.uuid4().hex
     try:
@@ -147,7 +156,10 @@ def create(question: str) -> dict:
         review,
         trace_id,
     )
-    _save(proposal)
+    try:
+        _save(proposal)
+    except sqlite3.Error:
+        return _store_refusal(trace_id)
     event("proposal_created", trace_id=trace_id, proposal_id=proposal_id, model=generated.model)
     return {
         "status": "proposed",
@@ -164,43 +176,51 @@ def create(question: str) -> dict:
 def execute(proposal_id: str, approval_token: str) -> dict:
     # Serialize read/check/consume so two simultaneous approvals cannot execute
     # the same SQL twice. The proposal is consumed before execution by design.
-    with _connection() as connection:
-        connection.execute("BEGIN IMMEDIATE")
-        proposal = _get(connection, proposal_id)
-        if proposal is None:
-            connection.execute("COMMIT")
-            return {"status": "refused", "reason": "Unknown or already-consumed proposal."}
-        if time.time() - proposal.created_at > TTL_SECONDS:
+    try:
+        with _connection() as connection:
+            connection.execute("BEGIN IMMEDIATE")
+            proposal = _get(connection, proposal_id)
+            if proposal is None:
+                connection.execute("COMMIT")
+                return {"status": "refused", "reason": "Unknown or already-consumed proposal."}
+            if time.time() - proposal.created_at > TTL_SECONDS:
+                connection.execute(
+                    "DELETE FROM pending_proposals WHERE proposal_id = ?", (proposal_id,)
+                )
+                connection.execute("COMMIT")
+                event(
+                    "proposal_refused",
+                    trace_id=proposal.trace_id,
+                    proposal_id=proposal_id,
+                    reason="stale",
+                )
+                return {"status": "refused", "reason": "Proposal expired; request a new review."}
+            token_hash = hashlib.sha256(approval_token.encode()).hexdigest()
+            if not secrets.compare_digest(proposal.approval_hash, token_hash):
+                connection.execute("COMMIT")
+                event(
+                    "proposal_refused",
+                    trace_id=proposal.trace_id,
+                    proposal_id=proposal_id,
+                    reason="approval",
+                )
+                return {
+                    "status": "refused",
+                    "reason": "Explicit analyst approval token is required.",
+                }
+            if proposal.snapshot_checksum != _snapshot_checksum():
+                connection.execute("COMMIT")
+                return {"status": "refused", "reason": "Snapshot changed; request a new proposal."}
+            result = validate_sql(proposal.sql)
+            if not result.valid:
+                connection.execute("COMMIT")
+                return {"status": "refused", "reason": result.reason}
             connection.execute(
                 "DELETE FROM pending_proposals WHERE proposal_id = ?", (proposal_id,)
             )
             connection.execute("COMMIT")
-            event(
-                "proposal_refused",
-                trace_id=proposal.trace_id,
-                proposal_id=proposal_id,
-                reason="stale",
-            )
-            return {"status": "refused", "reason": "Proposal expired; request a new review."}
-        token_hash = hashlib.sha256(approval_token.encode()).hexdigest()
-        if not secrets.compare_digest(proposal.approval_hash, token_hash):
-            connection.execute("COMMIT")
-            event(
-                "proposal_refused",
-                trace_id=proposal.trace_id,
-                proposal_id=proposal_id,
-                reason="approval",
-            )
-            return {"status": "refused", "reason": "Explicit analyst approval token is required."}
-        if proposal.snapshot_checksum != _snapshot_checksum():
-            connection.execute("COMMIT")
-            return {"status": "refused", "reason": "Snapshot changed; request a new proposal."}
-        result = validate_sql(proposal.sql)
-        if not result.valid:
-            connection.execute("COMMIT")
-            return {"status": "refused", "reason": result.reason}
-        connection.execute("DELETE FROM pending_proposals WHERE proposal_id = ?", (proposal_id,))
-        connection.execute("COMMIT")
+    except sqlite3.Error:
+        return _store_refusal("store-unavailable")
     event("proposal_approved", trace_id=proposal.trace_id, proposal_id=proposal_id)
     return execute_validated(
         result.sql or "", trace_id=proposal.trace_id, assumptions=proposal.assumptions

@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -7,13 +8,14 @@ from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, Field
 
 from .db import policy_schema, prepared_read_only_connection, semantic_catalog, snapshot_status
-from .examples import EXAMPLES
+from .examples import examples_for_schema
 from .proposals import create, execute
 from .service import query
 from .ui import CONSOLE_HTML
 
 app = FastAPI(title="Text-to-SQL Guardrails", version="0.1.0")
-EVALUATION_REPORT = Path(__file__).parents[2] / "evaluation" / "report.json"
+ASSET_ROOT = Path(os.getenv("GUARDRAILS_ASSET_ROOT", str(Path(__file__).parents[2])))
+EVALUATION_REPORT = ASSET_ROOT / "evaluation" / "report.json"
 
 
 class QueryRequest(BaseModel):
@@ -67,7 +69,7 @@ def get_semantic_catalog() -> dict:
 def get_examples() -> dict:
     """Human-readable prompts only; selecting one still requires V2 review."""
     return {
-        "examples": EXAMPLES,
+        "examples": examples_for_schema(policy_schema()),
         "disclosure": "Examples create proposals; they never execute SQL.",
     }
 
@@ -77,11 +79,20 @@ def get_data_preview(limit: int = Query(default=25, ge=1, le=100)) -> dict:
     """Return only curated, non-identifier columns from the active V2 contract."""
     schema = policy_schema()
     if set(schema) != {"fact_transactions"}:
+        columns = ["payment_date", "amount_usd", "status", "channel"]
+        with prepared_read_only_connection() as connection:
+            cursor = connection.execute(
+                f"SELECT {', '.join(columns)} FROM fact_payments LIMIT {limit}"
+            )
+            rows = [
+                dict(zip([item[0] for item in cursor.description], row, strict=True))
+                for row in cursor.fetchall()
+            ]
         return {
             "state": "demo_fixture",
-            "columns": [],
-            "rows": [],
-            "message": "An approved transaction snapshot is required for the curated data preview.",
+            "columns": columns,
+            "rows": rows,
+            "disclosure": "Hand-authored synthetic demo fixture only; customer and payment identifiers are excluded.",
         }
     columns = sorted(schema["fact_transactions"])
     rendered = ", ".join(columns)

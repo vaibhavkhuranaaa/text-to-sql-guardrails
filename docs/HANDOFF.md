@@ -6,6 +6,9 @@ Continue Text-to-SQL Interface with Guardrails and Hallucination Detection. Read
 
 ## Current state
 
+- Anonymous portfolio demo is verified at `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`: revision `ca-text-sql-guardrails-dev--0000006`, image tag `20260723-3`, digest `sha256:9ea98f96e2f23f84d50c148c3699c65205db66a4076e412b0ead001d94923cc7`. Public root, `/v1/evaluation`, `/v2/examples`, `/v2/data-preview`, proposal creation, approved execution, and single-use refusal all succeeded on 2026-07-23. Record status-level evidence only; no tokens, SQL, or result rows were retained.
+- This URL is deliberately anonymous and temporary: auth platform is disabled with `AllowAnonymous`; anyone with the link can send Foundry-backed questions and approve their own bounded preview. There is no caller identity, authorization, rate limiting, monitoring, or production/SLO claim.
+- The current one-replica revision uses `/tmp/text-to-sql-guardrails-proposals.sqlite3`. Approval state expires after five minutes and is lost on restart, scaling, or revision replacement. Azure Files remains mounted but is not used for SQLite because two fresh mounted paths returned `sqlite3.OperationalError: database is locked`; prior revision `ca-text-sql-guardrails-dev--0000005` is the rollback revision but retains that limitation.
 - Branch: `feat/text-to-sql-guardrails-initial-delivery`.
 - Governed delivery committed at `5c6e04b`; working tree was clean after removing ambient `.DS_Store` files.
 - Private Azure infrastructure exists in isolated `rg-text-to-sql-guardrails-dev` (East US): ACR, Azure Files proposal store, Log Analytics, and internal-only Container App. Its managed identity has `AcrPull` on the isolated registry and `Cognitive Services OpenAI User` on the shared OpenAI resource. No public ingress or Entra app-auth policy exists yet.

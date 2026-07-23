@@ -10,7 +10,8 @@ from pathlib import Path
 
 import duckdb
 
-FIXTURE_PATH = Path(__file__).parents[2] / "data" / "fixtures" / "payments.json"
+ASSET_ROOT = Path(os.getenv("GUARDRAILS_ASSET_ROOT", str(Path(__file__).parents[2])))
+FIXTURE_PATH = ASSET_ROOT / "data" / "fixtures" / "payments.json"
 APPROVED_SNAPSHOT_PATH = Path(__file__).parents[2] / "data" / "approved" / "payments.duckdb"
 SNAPSHOT_METADATA_PATH = APPROVED_SNAPSHOT_PATH.with_suffix(".metadata.json")
 DEMO_SCHEMA = {
