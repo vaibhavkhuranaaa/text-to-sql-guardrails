@@ -1,5 +1,7 @@
 # Deployment
 
+Current operational check (2026-07-23): external ingress is enabled on port 8000 with 100% traffic to the latest revision, and no local Uvicorn, Docker, or Azure CLI demo process is running or required.
+
 The anonymous portfolio demo is live at `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io` on Container App revision `ca-text-sql-guardrails-dev--0000006`. It uses image `textsqlguardrails278f1d.azurecr.io/text-to-sql-guardrails:20260723-3` (digest `sha256:9ea98f96e2f23f84d50c148c3699c65205db66a4076e412b0ead001d94923cc7`). The public root, evaluation report, schema-matched examples, safe fixture preview, and one proposal-to-approved-execution lifecycle were verified on 2026-07-23; a second approval was refused.
 
 This is deliberately anonymous: Container Apps auth is disabled and `AllowAnonymous` remains configured. Anyone with the URL can send Foundry-backed questions and approve their own bounded preview. There is no caller identity, analyst authorization, rate limiting, production monitoring, or availability/SLO evidence. Do not describe this deployment as secure or production-ready.
