@@ -6,7 +6,7 @@
 - Deployment: `temporary-demo`
 - Exposure: `anonymous`
 - Production claim: `false`
-- Publication: exact-SHA portfolio approval pending final catalog synchronization
+- Publication: approved at exact source commit `9b05287ce2598ad82920fc1c1dd19c1b62aec3f9`
 - Contract health: first-demo and temporary-demo publication targets pass; protected-hosting gates remain open
 
 ## Current evidence
@@ -51,7 +51,7 @@
 
 Local verification is complete: Ruff format/check passed, 29 tests passed with one Starlette deprecation warning, the evaluation and both first-demo manifest validators passed, Docker Compose resolved, `git diff --check` passed, and Graphify is fresh. A local in-image boundary run remains unavailable because this machine has no Docker application/daemon; CI contains the required build-and-inspect proof.
 
-The public remote, exact commit, Azure-built image boundary, replacement revision, live controls, and public routes are verified. Final publication requires pinning this evidence commit in the portfolio registry and synchronizing all consumers. Authentication and durable storage remain explicit limitations rather than claims. The workspace owner remains responsible for reviewing or tearing down the anonymous demo by `2026-08-06T23:59:59Z`.
+The public remote, exact commit, Azure-built image boundary, replacement revision, live controls, and public routes are verified. The portfolio site, Resume Creator, and public GitHub index are synchronized to the same approved evidence commit. Authentication and durable storage remain explicit limitations rather than claims. The workspace owner remains responsible for reviewing or tearing down the anonymous demo by `2026-08-06T23:59:59Z`.
 
 ## Workspace stabilization — 2026-07-23
 

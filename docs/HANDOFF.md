@@ -6,6 +6,8 @@ Read `AGENTS.md`, `docs/STATE.md`, `portfolio/project.json`, and the structured 
 
 The project is a verified anonymous temporary demo, not an undeployed local prototype and not a production service. Replacement revision `0000007` deploys the source-level rate, process-budget, expiry, and status controls and scales from zero to one replica.
 
+Portfolio publication is approved at exact evidence commit `9b05287ce2598ad82920fc1c1dd19c1b62aec3f9`. The portfolio site, Resume Creator, and public GitHub index were regenerated from the same three-project approved catalog.
+
 The authorized local cleanup is recorded at `3b49ce43642afd09a72f8ab779fba71d8eb1ffc0`. Roll it back only by restoring the named file from macOS Trash or through a reviewed revert; do not reset to `9f93ae36def6a9ce627a322f8ac7410ed1c6da20`.
 
 ## Work completed in the current migration
