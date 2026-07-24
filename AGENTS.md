@@ -16,7 +16,7 @@
 - Use only permitted synthetic data. Never log or publish raw questions, result rows, tokens, environment values, raw source rows, or source identifiers.
 - Do not invent metrics, URLs, checks, deployment state, or production claims. Every résumé bullet and public metric must resolve to a versioned evidence ID.
 - Use purpose branches and conventional commits with the configured human identity. Never add an AI/model author or co-author.
-- Treat preview, remote creation, push, publication, protected deployment, cloud spending, and teardown as separate actions with their own authority.
+- Merging a completed release to `main` authorizes automatic redeployment to the declared existing Azure target, live-SHA verification, and portfolio synchronization. New or expanded cloud spending and teardown remain separately owner-gated.
 - Delegation is optional and bounded; do not use subagents when coordination costs more than direct work.
 - Use host-reported context/quota signals. Update `docs/STATE.md` and `docs/HANDOFF.md` before a handoff; do not claim automatic percentage detection.
 
