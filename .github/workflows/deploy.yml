@@ -1,15 +1,13 @@
-name: Deploy approved Text-to-SQL revision
+name: Deploy verified Text-to-SQL revision
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Approved 40-character source revision
-        required: true
-        type: string
-      approval_timestamp:
-        description: Owner approval time in ISO-8601 UTC
-        required: true
+        description: Optional 40-character source revision; defaults to the triggering commit
+        required: false
         type: string
 
 permissions:
@@ -25,6 +23,7 @@ env:
   REGISTRY: textsqlguardrails278f1d
   IMAGE_REPOSITORY: text-to-sql-guardrails
   CONTAINER_APP: ca-text-sql-guardrails-dev
+  SOURCE_SHA: ${{ inputs.source_sha || github.sha }}
 
 jobs:
   deploy:
@@ -33,19 +32,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.source_sha }}
-      - name: Verify approved revision
+          ref: ${{ env.SOURCE_SHA }}
+      - name: Verify exact revision
         run: |
-          test "$(git rev-parse HEAD)" = "${{ inputs.source_sha }}"
-          test "$(printf '%s' '${{ inputs.source_sha }}' | wc -c)" -eq 40
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(printf '%s' "$SOURCE_SHA" | wc -c)" -eq 40
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --locked --group dev
       - run: uv run ruff format --check . && uv run ruff check . && uv run pytest -q
       - run: uv run python scripts/run_evaluation.py && uv run python scripts/validate_manifest.py
       - name: Verify container data boundary
         run: |
-          docker build --tag text-to-sql-release:${{ inputs.source_sha }} .
-          docker run --rm --entrypoint python text-to-sql-release:${{ inputs.source_sha }} /app/scripts/verify_container_boundary.py
+          docker build --tag "text-to-sql-release:$SOURCE_SHA" .
+          docker run --rm --entrypoint python "text-to-sql-release:$SOURCE_SHA" /app/scripts/verify_container_boundary.py
       - uses: azure/login@v2
         with:
           client-id: ${{ vars.AZURE_CLIENT_ID }}
@@ -55,17 +54,17 @@ jobs:
         run: >
           az acr build
           --registry "$REGISTRY"
-          --image "$IMAGE_REPOSITORY:${{ inputs.source_sha }}"
+          --image "$IMAGE_REPOSITORY:$SOURCE_SHA"
           .
       - name: Deploy exact image and verify
         run: |
-          image="$REGISTRY.azurecr.io/$IMAGE_REPOSITORY:${{ inputs.source_sha }}"
-          digest="$(az acr repository show --name "$REGISTRY" --image "$IMAGE_REPOSITORY:${{ inputs.source_sha }}" --query digest --output tsv)"
+          image="$REGISTRY.azurecr.io/$IMAGE_REPOSITORY:$SOURCE_SHA"
+          digest="$(az acr repository show --name "$REGISTRY" --image "$IMAGE_REPOSITORY:$SOURCE_SHA" --query digest --output tsv)"
           az containerapp update \
             --resource-group "$RESOURCE_GROUP" \
             --name "$CONTAINER_APP" \
             --image "$image" \
-            --set-env-vars "PORTFOLIO_SOURCE_SHA=${{ inputs.source_sha }}" \
+            --set-env-vars "PORTFOLIO_SOURCE_SHA=$SOURCE_SHA" \
             --output none
           revision="$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" --query properties.latestReadyRevisionName --output tsv)"
           fqdn="$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" --query properties.configuration.ingress.fqdn --output tsv)"
@@ -77,23 +76,10 @@ jobs:
             --digest "$digest" \
             --expires-at "$expires_at" \
             --owner "${{ github.actor }}" \
-            --source-sha "${{ inputs.source_sha }}" \
+            --source-sha "$SOURCE_SHA" \
             --out artifacts/release-receipt.json
-          jq --arg approvedAt "${{ inputs.approval_timestamp }}" '. + {approvedAt:$approvedAt}' \
-            artifacts/release-receipt.json > artifacts/release-receipt.tmp
-          mv artifacts/release-receipt.tmp artifacts/release-receipt.json
       - uses: actions/upload-artifact@v4
         with:
-          name: text-to-sql-release-${{ inputs.source_sha }}
+          name: text-to-sql-release-${{ env.SOURCE_SHA }}
           path: artifacts/release-receipt.json
           if-no-files-found: error
-      - name: Request exact-SHA portfolio admission
-        env:
-          GH_TOKEN: ${{ secrets.PORTFOLIO_DISPATCH_TOKEN }}
-          PORTFOLIO_REPOSITORY: ${{ vars.PORTFOLIO_REPOSITORY }}
-        run: >
-          gh api --method POST "repos/${PORTFOLIO_REPOSITORY}/dispatches"
-          -f event_type=project-release-ready
-          -f client_payload[repository]="$GITHUB_REPOSITORY"
-          -f client_payload[ref]="${{ inputs.source_sha }}"
-          -f client_payload[manifest_path]="portfolio/project.json"

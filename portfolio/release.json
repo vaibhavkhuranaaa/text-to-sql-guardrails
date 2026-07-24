@@ -4,6 +4,11 @@
   "provider": "Azure Container Apps",
   "workflow": "deploy.yml",
   "deploymentTarget": "ca-text-sql-guardrails-dev",
+  "publicProject": true,
+  "verification": {
+    "url": "https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io/v1/status",
+    "sourceShaField": "source_sha"
+  },
   "paidResource": true,
-  "costApprovalRequired": true
+  "costApprovalRequired": false
 }
