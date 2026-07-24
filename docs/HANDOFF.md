@@ -17,7 +17,7 @@ The project is a verified anonymous temporary demo, not an undeployed local prot
 
 ## Preserve
 
-- Do not remove or stage the pre-existing untracked `data/.DS_Store` without separate owner instruction.
+- `data/.DS_Store` was moved to macOS Trash as `text-to-sql-guardrails-data.DS_Store` under explicit owner authority; restore it from Trash only if needed.
 - Raw CSVs, approved snapshots, profiles, metadata, benchmarks, and proposal stores are local/ignored artifacts.
 - Do not expose the owner-controlled Azure endpoint/deployment environment configuration as committed runtime values.
 - Do not describe the temporary URL as authenticated, rate-limited, monitored, durable, production-ready, or live-verified after these source changes; revision `0000006` predates them.
@@ -29,7 +29,7 @@ The project is a verified anonymous temporary demo, not an undeployed local prot
 - Evaluation regenerated and both first-demo manifest validators passed.
 - Docker Compose resolved and `git diff --check` passed.
 - Graphify was regenerated and source-fingerprint stamped.
-- `data/.DS_Store` remains unrelated and untracked.
+- The authorized `.DS_Store` cleanup is recoverable from macOS Trash.
 - The in-image boundary proof could not run locally because no Docker application/daemon exists; CI now performs it after image construction.
 - The private remote is `vaibhavkhuranaaa/text-to-sql-guardrails` and draft PR 1 contains the first-demo migration. Keep it draft until checks and owner review complete.
 

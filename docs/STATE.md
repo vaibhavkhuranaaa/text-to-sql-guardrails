@@ -43,11 +43,11 @@
 - Branch: `feat/text-to-sql-guardrails-initial-delivery`
 - Remote: private `vaibhavkhuranaaa/text-to-sql-guardrails`
 - Draft PR: `https://github.com/vaibhavkhuranaaa/text-to-sql-guardrails/pull/1`
-- Pre-existing unrelated item to preserve: untracked `data/.DS_Store`
+- Workspace cleanup: `data/.DS_Store` was moved to macOS Trash as `text-to-sql-guardrails-data.DS_Store` under the task's explicit deletion authority. It can be restored from Trash.
 - Graphify: fresh 227-node, 396-edge graph across code and authoritative documentation; source fingerprint stamped at `2026-07-23T20:49:16.984Z`
 
 ## Next gate
 
 Local verification is complete: Ruff format/check passed, 29 tests passed with one Starlette deprecation warning, the evaluation and both first-demo manifest validators passed, Docker Compose resolved, `git diff --check` passed, and Graphify is fresh. A local in-image boundary run remains unavailable because this machine has no Docker application/daemon; CI contains the required build-and-inspect proof.
 
-The private remote and draft PR now exist. Publication remains blocked until the PR is reviewed, a replacement deployment proves limits/expiry, authentication and durable storage decisions are resolved, an exact-SHA preview passes, and the portfolio registry receives owner approval.
+The private remote and draft PR now exist. Publication remains blocked until the PR is reviewed, a replacement deployment proves limits/expiry, authentication and durable storage decisions are resolved, an exact-SHA preview passes, and the portfolio registry receives owner approval. The workspace owner remains responsible for reviewing or tearing down the anonymous demo by `2026-08-06T23:59:59Z`.
