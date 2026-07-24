@@ -74,6 +74,97 @@
     "Local latency and cost observations are not production SLO or cost claims"
   ],
   "disclaimer": "Temporary anonymous, non-production demonstration using synthetic data only. It is not a bank system, fraud decision service, security posture, availability claim, or production-readiness claim.",
+  "presentation": {
+    "question": "How can analysts use natural-language SQL proposals without letting model output execute unchecked?",
+    "answer": "Separate proposal from execution, expose assumptions and lineage, enforce parser-backed policy, require short-lived human approval, and revalidate before one bounded read-only preview.",
+    "decisionSupported": "Whether a proposed analytical query is within the classified schema and safe enough for one reviewed execution.",
+    "architectureAlt": "System architecture showing an analyst, synthetic data and semantic catalog, FastAPI proposal and approval interfaces, Azure OpenAI, SQLGlot and DuckDB validation, ephemeral approval storage, read-only execution, privacy boundary, telemetry, deployment controls, and evaluation.",
+    "evaluationMode": "deterministic local policy evaluation plus live status-only integration checks on a temporary demo",
+    "publicationStatus": "review_required",
+    "technologyRoles": {
+      "Python": "Service, policy, data, and evaluation language",
+      "FastAPI": "Proposal, approval, status, and execution interfaces",
+      "DuckDB": "Read-only analytical execution engine",
+      "SQLGlot": "Parser-backed SQL policy",
+      "Azure OpenAI": "Natural-language SQL proposal generation",
+      "Microsoft Entra ID": "Credential-free Azure authentication",
+      "Azure Container Apps": "Temporary scale-to-zero hosting",
+      "Docker": "Reproducible application boundary",
+      "OpenTelemetry": "Privacy-preserving lifecycle telemetry"
+    },
+    "quickStart": [
+      {
+        "label": "Install and verify",
+        "command": "uv sync --locked --group dev\nuv run ruff format --check .\nuv run ruff check .\nuv run pytest -q"
+      },
+      {
+        "label": "Run the deterministic walkthrough",
+        "command": "uv run guardrails \"What is the total amount of completed payments?\"\nuv run guardrails \"Delete all payments\""
+      },
+      {
+        "label": "Run the local analyst console",
+        "command": "uv run uvicorn guardrails.api:app --reload"
+      }
+    ],
+    "securityControls": [
+      {
+        "control": "Parser-backed read-only SQL policy",
+        "implementation": "SQLGlot validates statement shape, functions, tables, columns, identifier projection, and resource boundaries before DuckDB EXPLAIN or execution.",
+        "evidenceRefs": ["evaluation.local-policy"],
+        "limitation": "A syntactically safe query can still be semantically wrong, so human review remains mandatory."
+      },
+      {
+        "control": "Data and container boundary",
+        "implementation": "Raw source data and approved snapshots are excluded from the image; model context and previews omit identifier-like fields.",
+        "evidenceRefs": ["security.container-data-boundary", "disclosure.synthetic-data"],
+        "limitation": "The public fixture remains a small hand-authored synthetic demonstration."
+      },
+      {
+        "control": "Short-lived single-use approval",
+        "implementation": "Execution requires a five-minute token-bound approval and revalidates SQL policy plus the active snapshot checksum.",
+        "evidenceRefs": ["integration.entra-proposal-lifecycle"],
+        "limitation": "Approval state is ephemeral SQLite and is not durable across restarts or replicas."
+      },
+      {
+        "control": "Temporary-demo controls",
+        "implementation": "The public revision exposes rate, proposal-budget, expiry, and aggregate status controls.",
+        "evidenceRefs": ["deployment.temporary-demo", "security.demo-fixture-boundary"],
+        "limitation": "Controls are process-local and reset after scale-to-zero or restart; there is no caller authorization."
+      }
+    ],
+    "costBoundaries": [
+      {
+        "component": "Azure Container Apps",
+        "boundary": "Consumption profile with zero-to-one replicas and an owner-controlled expiry.",
+        "implication": "The demo can cold start and must be reviewed or torn down by the recorded expiry; no availability SLO is claimed."
+      },
+      {
+        "component": "Azure OpenAI",
+        "boundary": "Proposal-only model call with a per-process budget and a classified semantic catalog.",
+        "implication": "Local latency and cost observations are not production cost or performance claims."
+      },
+      {
+        "component": "Proposal and analytics storage",
+        "boundary": "Ephemeral SQLite plus a read-only synthetic fixture in the public demo.",
+        "implication": "Durable multi-replica operation requires an owner-approved transactional store."
+      }
+    ],
+    "repositoryStructure": [
+      { "path": "src/guardrails/", "purpose": "API, proposal, approval, SQL policy, execution, data, and telemetry code." },
+      { "path": "evaluation/", "purpose": "Deterministic policy cases and generated aggregate report." },
+      { "path": "data/", "purpose": "Synthetic fixture, provenance, classification, and ignored local release artifacts." },
+      { "path": "evidence/deployment/", "purpose": "Status-only deployment verification records." },
+      { "path": "architecture/system.mmd", "purpose": "Canonical editable architecture source." },
+      { "path": "portfolio/", "purpose": "Public evidence manifest and generated presentation assets." }
+    ],
+    "verification": [
+      { "check": "Format and lint", "command": "uv run ruff format --check . && uv run ruff check ." },
+      { "check": "Tests", "command": "uv run pytest -q" },
+      { "check": "Evaluation and manifest", "command": "uv run python scripts/run_evaluation.py && uv run python scripts/validate_manifest.py", "evidenceRef": "evaluation.local-policy" },
+      { "check": "Container configuration", "command": "docker compose config >/dev/null" }
+    ],
+    "licenseNote": "Source code uses the repository license. MoMTSim V2 inspiration is attributed under CC BY 4.0; deployed rows are repository-authored synthetic fixtures."
+  },
   "dataDisclosure": {
     "source": "Hand-authored synthetic demo fixture inspired by the MoMTSim V2 synthetic mobile-money dataset (DOI 10.17632/zhj366m53p.2)",
     "license": "MoMTSim V2 is CC BY 4.0; the deployed rows are repository-authored synthetic fixtures rather than redistributed source rows",
@@ -104,7 +195,14 @@
       "claim": "All 18 deterministic policy cases matched their expected trusted or refused outcomes.",
       "source": "evaluation/report.json",
       "method": "uv run python scripts/run_evaluation.py against the committed synthetic fixture",
-      "result": "18/18 expected outcomes"
+      "result": "18/18 expected outcomes",
+      "scope": "18 trusted and refused cases over the committed synthetic fixture",
+      "observedAt": "2026-07-24T04:25:22Z",
+      "environment": "Local deterministic evaluation",
+      "classification": "synthetic",
+      "execution": "deterministic",
+      "caveat": "The fixture and case set are intentionally bounded and do not establish open-ended semantic correctness.",
+      "counts": { "total": 18, "passed": 18, "failed": 0 }
     },
     {
       "id": "deployment.temporary-demo",
@@ -112,7 +210,14 @@
       "claim": "Six status-only public route, fixture-boundary, and deployed-control checks passed for the anonymous temporary demo.",
       "source": "evidence/deployment/temporary-demo.json",
       "method": "HTTP checks with response bodies limited to status and disclosed fixture metadata",
-      "result": "revision 0000007 / 6 checks passed"
+      "result": "revision 0000007 / 6 checks passed",
+      "scope": "Root, evaluation, examples, safe preview, active fixture boundary, and deployed control configuration",
+      "observedAt": "2026-07-24T04:25:22Z",
+      "environment": "Azure Container Apps temporary anonymous demo",
+      "classification": "synthetic",
+      "execution": "live",
+      "caveat": "Status-only checks do not establish availability, caller authorization, durable limits, or production readiness.",
+      "counts": { "total": 6, "passed": 6, "failed": 0 }
     },
     {
       "id": "security.demo-fixture-boundary",

@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "package": "simple-icons",
+    "version": "16.27.0",
+    "license": "CC0-1.0",
+    "url": "https://simpleicons.org"
+  },
+  "technologies": [
+    {
+      "name": "Python",
+      "icon": "portfolio/assets/technology/python.svg",
+      "role": "Service, policy, data, and evaluation language",
+      "provenance": "Simple Icons 16.27.0 (CC0-1.0)"
+    },
+    {
+      "name": "FastAPI",
+      "icon": "portfolio/assets/technology/fastapi.svg",
+      "role": "Proposal, approval, status, and execution interfaces",
+      "provenance": "Simple Icons 16.27.0 (CC0-1.0)"
+    },
+    {
+      "name": "DuckDB",
+      "icon": "portfolio/assets/technology/duckdb.svg",
+      "role": "Read-only analytical execution engine",
+      "provenance": "Simple Icons 16.27.0 (CC0-1.0)"
+    },
+    {
+      "name": "SQLGlot",
+      "icon": null,
+      "role": "Parser-backed SQL policy",
+      "provenance": "Visible text fallback; no approved local logo registered"
+    },
+    {
+      "name": "Azure OpenAI",
+      "icon": null,
+      "role": "Natural-language SQL proposal generation",
+      "provenance": "Visible text fallback; no approved local logo registered"
+    },
+    {
+      "name": "Microsoft Entra ID",
+      "icon": null,
+      "role": "Credential-free Azure authentication",
+      "provenance": "Visible text fallback; no approved local logo registered"
+    },
+    {
+      "name": "Azure Container Apps",
+      "icon": null,
+      "role": "Temporary scale-to-zero hosting",
+      "provenance": "Visible text fallback; no approved local logo registered"
+    },
+    {
+      "name": "Docker",
+      "icon": "portfolio/assets/technology/docker.svg",
+      "role": "Reproducible application boundary",
+      "provenance": "Simple Icons 16.27.0 (CC0-1.0)"
+    },
+    {
+      "name": "OpenTelemetry",
+      "icon": "portfolio/assets/technology/opentelemetry.svg",
+      "role": "Privacy-preserving lifecycle telemetry",
+      "provenance": "Simple Icons 16.27.0 (CC0-1.0)"
+    }
+  ]
+}

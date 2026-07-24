@@ -59,3 +59,15 @@ The public remote, exact commit, Azure-built image boundary, replacement revisio
 - Verification: the only authorized Trash target is absent from the worktree and recoverable from macOS Trash; repository checks remain as recorded above.
 - Rollback baseline: `9f93ae36def6a9ce627a322f8ac7410ed1c6da20`
 - Next action: owner reviews or tears down the anonymous temporary demo by its recorded expiry.
+
+- Checkpoint: 2026-07-24T05:30:15.531Z — Presentation handoff completed for text-to-sql-guardrails.
+
+- `sh -lc uv run ruff format --check . && uv run ruff check .` passed in 146 ms.
+- `sh -lc uv run pytest -q` passed in 877 ms.
+- `sh -lc uv run python scripts/run_evaluation.py && uv run python scripts/validate_manifest.py` passed in 358 ms.
+- `sh -lc docker compose config >/dev/null` passed in 125 ms.
+- `node scripts/project-presentation.mjs validate --check` passed in 36 ms.
+- `sh -lc ! rg -n '(AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----)' --glob '!uv.lock' --glob '!package-lock.json' .` passed in 96 ms.
+- `git diff --check` passed in 10 ms.
+
+Public membership and exact-SHA approval were not changed.

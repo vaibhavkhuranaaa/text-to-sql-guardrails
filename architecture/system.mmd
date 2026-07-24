@@ -1,9 +1,43 @@
+%% portfolio-architecture: v1
 flowchart LR
-  Analyst[Analyst: exact catalog question] --> API[FastAPI /v1/query]
-  API --> Generator[Deterministic intent-to-SQL catalog]
-  Generator -->|unsupported| Refusal[Refused verdict]
-  Generator --> Validator[SQL guardrails]
-  Validator -->|single SELECT; allowed schema; EXPLAIN; LIMIT 100| DuckDB[(Local DuckDB fixture)]
-  Validator -->|invalid / hallucinated| Refusal
-  DuckDB --> Verdict[Trusted verdict: SQL, checks, preview]
-  API --> Telemetry[OpenTelemetry span + structured fields]
+  Analyst(["Analyst / technical reviewer"])
+  Catalog[("Classified semantic catalog")]
+  Fixture[("Hand-authored synthetic fixture")]
+
+  subgraph Service["FastAPI proposal and approval boundary"]
+    API("Proposal, status, approval, and execution interfaces")
+    Proposal("SQL proposal package: SQL, assumptions, lineage, and checks")
+    Approval[("Ephemeral single-use SQLite approval store")]
+    Revalidate("Policy + snapshot checksum revalidation")
+    Refusal("Explicit refused verdict")
+  end
+
+  subgraph Policy["Deterministic execution boundary"]
+    Parser("SQLGlot statement, schema, function, and identifier policy")
+    Explain("DuckDB EXPLAIN + memory, thread, row, and time limits")
+    DuckDB[("Read-only DuckDB fixture")]
+    Preview("Maximum 100-row identifier-excluding preview")
+  end
+
+  Model{{"Azure OpenAI via Microsoft Entra ID"}}
+  Runtime{{"Azure Container Apps temporary demo"}}
+  Telemetry("OpenTelemetry lifecycle events + aggregate status")
+  Evaluation("18-case policy evaluation + six status-only live checks")
+
+  Analyst --> API --> Proposal --> Parser --> Explain
+  Catalog --> Proposal
+  API -. proposal only .-> Model
+  Parser -->|valid| Approval --> Revalidate --> DuckDB --> Preview --> Analyst
+  Parser -->|invalid or hallucinated| Refusal --> Analyst
+  Explain -->|unsafe or over budget| Refusal
+  Fixture --> DuckDB
+  API -. deployed on .-> Runtime
+  Telemetry -. monitoring without questions, SQL, tokens, or rows .-> API
+  Evaluation -. evidence .-> Parser
+  Evaluation -. deployment control .-> Runtime
+
+  subgraph Legend["Legend"]
+    L1("Service / processing") --> L2[("Persistent data")]
+    L3("Optional / asynchronous") -.-> L4{{"External hosted service"}}
+    L5("Monitoring / evidence") -.-> L6("Control flow")
+  end
