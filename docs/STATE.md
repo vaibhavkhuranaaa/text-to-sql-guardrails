@@ -1,5 +1,7 @@
 # State
 
+Exact-SHA deployment automation is declared in `portfolio/release.json`. The workflow builds an immutable ACR image, checks its container boundary, updates only the existing Container App, verifies the deployed SHA and expiry controls, uploads a receipt, and requests portfolio admission.
+
 ## Independent axes
 
 - Lifecycle: `first-demo`

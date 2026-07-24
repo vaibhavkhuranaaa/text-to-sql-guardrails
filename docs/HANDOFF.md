@@ -1,5 +1,9 @@
 # Handoff
 
+## Minimal resume
+
+Read `AGENTS.md`, `docs/STATE.md`, this file, and only the paths named by the task. Public release uses `portfolio/release.json` and `.github/workflows/deploy.yml`; it requires an approved exact SHA, the documented temporary-demo expiry, and explicit approval for the existing paid Azure target.
+
 ## Resume point
 
 Read `AGENTS.md`, `docs/STATE.md`, `portfolio/project.json`, and the structured deployment evidence. Query the fresh Graphify graph first for covered code paths and fall back to direct inspection where needed.

@@ -29,6 +29,7 @@ parser.add_argument("--image", required=True)
 parser.add_argument("--digest", required=True)
 parser.add_argument("--expires-at", required=True)
 parser.add_argument("--owner", required=True)
+parser.add_argument("--source-sha", required=True)
 parser.add_argument("--out", type=Path, required=True)
 args = parser.parse_args()
 
@@ -44,6 +45,8 @@ for label, path in [
     checks.append({"id": label, "path": path, "httpStatus": status, "result": "pass"})
 
 status_code, status_payload = fetch_json(f"{base_url}/v1/status")
+if status_payload.get("source_sha") != args.source_sha:
+    raise SystemExit("public deployment source SHA does not match the approved revision")
 snapshot = status_payload["snapshot"]
 if snapshot.get("state") != "demo_fixture":
     raise SystemExit("public deployment is not using the disclosed demo fixture")
@@ -91,6 +94,7 @@ record = {
     "revision": args.revision,
     "image": args.image,
     "imageDigest": args.digest,
+    "sourceSha": args.source_sha,
     "verifiedAt": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
     "expiresAt": args.expires_at,
     "expiryOwner": args.owner,
