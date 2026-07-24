@@ -126,6 +126,7 @@ def get_status() -> dict:
         "snapshot": snapshot_status(),
         "policy": "v1 deterministic catalog; v2 Foundry proposals require explicit human approval before read-only execution.",
         "anonymous_demo_controls": PROPOSAL_GATE.status(),
+        "source_sha": os.getenv("PORTFOLIO_SOURCE_SHA"),
     }
 
 

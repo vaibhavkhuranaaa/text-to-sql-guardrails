@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "status": "enabled",
+  "provider": "Azure Container Apps",
+  "workflow": "deploy.yml",
+  "deploymentTarget": "ca-text-sql-guardrails-dev",
+  "paidResource": true,
+  "costApprovalRequired": true
+}
