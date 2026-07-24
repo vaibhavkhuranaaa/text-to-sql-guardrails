@@ -1,8 +1,18 @@
 name: Validate project
 on: [push, pull_request]
 jobs:
-  contract:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: test -f docs/STATE.md && test -f docs/HANDOFF.md && test -f architecture/system.mmd && test -f portfolio/project.json
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --locked --group dev
+      - run: uv run ruff format --check . && uv run ruff check .
+      - run: uv run pytest -q
+      - run: uv run python scripts/run_evaluation.py && uv run python scripts/validate_manifest.py
+      - run: node scripts/project-presentation.mjs validate --check
+      - run: "! rg -n '(AKIA[0-9A-Z]{16}|sk-[A-Za-z0-9]{20,}|-----BEGIN (RSA|OPENSSH|EC) PRIVATE KEY-----)' --glob '!uv.lock' ."
+      - name: Prove approved and raw data are excluded from the image
+        run: |
+          docker build --tag text-to-sql-contract:${GITHUB_SHA} .
+          docker run --rm --entrypoint python text-to-sql-contract:${GITHUB_SHA} /app/scripts/verify_container_boundary.py

@@ -1,0 +1,14 @@
+.git/
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+graphify-out/
+.env
+.env.*
+data/Raw/
+data/raw/
+data/approved/
+data/.DS_Store
+benchmarks/
+*.sqlite3
