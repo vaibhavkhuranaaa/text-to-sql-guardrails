@@ -51,3 +51,10 @@
 Local verification is complete: Ruff format/check passed, 29 tests passed with one Starlette deprecation warning, the evaluation and both first-demo manifest validators passed, Docker Compose resolved, `git diff --check` passed, and Graphify is fresh. A local in-image boundary run remains unavailable because this machine has no Docker application/daemon; CI contains the required build-and-inspect proof.
 
 The private remote and draft PR now exist. Publication remains blocked until the PR is reviewed, a replacement deployment proves limits/expiry, authentication and durable storage decisions are resolved, an exact-SHA preview passes, and the portfolio registry receives owner approval. The workspace owner remains responsible for reviewing or tearing down the anonymous demo by `2026-08-06T23:59:59Z`.
+
+## Workspace stabilization — 2026-07-23
+
+- Stable cleanup record commit: `3b49ce43642afd09a72f8ab779fba71d8eb1ffc0`
+- Verification: the only authorized Trash target is absent from the worktree and recoverable from macOS Trash; repository checks remain as recorded above.
+- Rollback baseline: `9f93ae36def6a9ce627a322f8ac7410ed1c6da20`
+- Next action: owner reviews or tears down the anonymous temporary demo by its recorded expiry.

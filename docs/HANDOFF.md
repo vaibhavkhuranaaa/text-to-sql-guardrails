@@ -6,6 +6,8 @@ Read `AGENTS.md`, `docs/STATE.md`, `portfolio/project.json`, and the structured 
 
 The project is a verified anonymous temporary demo, not an undeployed local prototype and not a production service. The manifest now reflects that distinction. The current public revision is still `0000006`; no deployment was performed during the orchestration migration.
 
+The authorized local cleanup is recorded at `3b49ce43642afd09a72f8ab779fba71d8eb1ffc0`. Roll it back only by restoring the named file from macOS Trash or through a reviewed revert; do not reset to `9f93ae36def6a9ce627a322f8ac7410ed1c6da20`.
+
 ## Work completed in the current migration
 
 - Reconciled README, state, handoff, architecture, product, deployment, and manifest facts.
