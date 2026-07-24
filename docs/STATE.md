@@ -6,16 +6,17 @@
 - Deployment: `temporary-demo`
 - Exposure: `anonymous`
 - Production claim: `false`
-- Publication: `absent`
-- Contract health: first-demo target `pass`; publication `fail` because no remote/source URL and protected-hosting gates remain open
+- Publication: exact-SHA portfolio approval pending final catalog synchronization
+- Contract health: first-demo and temporary-demo publication targets pass; protected-hosting gates remain open
 
 ## Current evidence
 
 - Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`
-- Revision: `ca-text-sql-guardrails-dev--0000006`
-- Image: `textsqlguardrails278f1d.azurecr.io/text-to-sql-guardrails:20260723-3`
-- Digest: `sha256:9ea98f96e2f23f84d50c148c3699c65205db66a4076e412b0ead001d94923cc7`
-- Status-only verification: `evidence/deployment/temporary-demo.json`, observed `2026-07-23T20:43:49.489473Z`
+- Revision: `ca-text-sql-guardrails-dev--0000007`
+- Image: `textsqlguardrails278f1d.azurecr.io/text-to-sql-guardrails:6ba0f20`
+- Digest: `sha256:fb11bdf14321e18fb835670154b737a3d4ff6d81c5c29ebba4f79c9c47bc7e53`
+- Status-only verification: `evidence/deployment/temporary-demo.json`, observed `2026-07-24T04:25:22.107862Z`
+- Scale: Consumption profile, zero-to-one replicas
 - Owner-controlled expiry: `2026-08-06T23:59:59Z`
 - Local policy evaluation: `evaluation/report.json`, 18 of 18 expected outcomes
 - Architecture asset: `portfolio/assets/system.png`; source: `architecture/system.mmd`
@@ -32,7 +33,7 @@
 
 ## Current deployment limitations
 
-- Revision `0000006` predates the new rate, process-budget, expiry, and counter code.
+- Rate, proposal-budget, and counter controls are process-local and reset after scale-to-zero or restart.
 - No caller identity or authorization.
 - Proposal state is SQLite under `/tmp`, single-replica, and restart-sensitive.
 - No production monitoring, alerting, availability evidence, load envelope, or SLO.
@@ -41,7 +42,7 @@
 ## Repository state
 
 - Branch: `feat/text-to-sql-guardrails-initial-delivery`
-- Remote: private `vaibhavkhuranaaa/text-to-sql-guardrails`
+- Remote: public `vaibhavkhuranaaa/text-to-sql-guardrails`
 - Draft PR: `https://github.com/vaibhavkhuranaaa/text-to-sql-guardrails/pull/1`
 - Workspace cleanup: `data/.DS_Store` was moved to macOS Trash as `text-to-sql-guardrails-data.DS_Store` under the task's explicit deletion authority. It can be restored from Trash.
 - Graphify: fresh 227-node, 396-edge graph across code and authoritative documentation; source fingerprint stamped at `2026-07-23T20:49:16.984Z`
@@ -50,7 +51,7 @@
 
 Local verification is complete: Ruff format/check passed, 29 tests passed with one Starlette deprecation warning, the evaluation and both first-demo manifest validators passed, Docker Compose resolved, `git diff --check` passed, and Graphify is fresh. A local in-image boundary run remains unavailable because this machine has no Docker application/daemon; CI contains the required build-and-inspect proof.
 
-The private remote and draft PR now exist. Publication remains blocked until the PR is reviewed, a replacement deployment proves limits/expiry, authentication and durable storage decisions are resolved, an exact-SHA preview passes, and the portfolio registry receives owner approval. The workspace owner remains responsible for reviewing or tearing down the anonymous demo by `2026-08-06T23:59:59Z`.
+The public remote, exact commit, Azure-built image boundary, replacement revision, live controls, and public routes are verified. Final publication requires pinning this evidence commit in the portfolio registry and synchronizing all consumers. Authentication and durable storage remain explicit limitations rather than claims. The workspace owner remains responsible for reviewing or tearing down the anonymous demo by `2026-08-06T23:59:59Z`.
 
 ## Workspace stabilization — 2026-07-23
 

@@ -60,6 +60,28 @@ checks.append(
     }
 )
 
+controls = status_payload.get("anonymous_demo_controls", {})
+expected_controls = {
+    "proposals_per_minute": 5,
+    "max_proposals_per_process": 100,
+    "expires_at": args.expires_at,
+    "expired": False,
+}
+for key, expected in expected_controls.items():
+    if controls.get(key) != expected:
+        raise SystemExit(
+            f"public deployment control {key} is {controls.get(key)!r}, expected {expected!r}"
+        )
+checks.append(
+    {
+        "id": "anonymous_demo_controls",
+        "path": "/v1/status",
+        "httpStatus": status_code,
+        "result": "pass",
+        "observed": expected_controls,
+    }
+)
+
 record = {
     "schemaVersion": 1,
     "kind": "temporary-anonymous-demo",
@@ -75,7 +97,7 @@ record = {
     "checks": checks,
     "limitations": [
         "No caller identity or authorization boundary.",
-        "The deployed revision predates source-level rate and process-budget controls.",
+        "Rate and proposal-budget controls are process-local and reset after scale-to-zero or restart.",
         "No production availability, alerting, or SLO evidence.",
         "Proposal state is single-replica SQLite under /tmp and is lost on restart.",
     ],

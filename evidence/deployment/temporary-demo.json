@@ -4,10 +4,10 @@
   "productionClaim": false,
   "exposure": "anonymous",
   "baseUrl": "https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io",
-  "revision": "ca-text-sql-guardrails-dev--0000006",
-  "image": "textsqlguardrails278f1d.azurecr.io/text-to-sql-guardrails:20260723-3",
-  "imageDigest": "sha256:9ea98f96e2f23f84d50c148c3699c65205db66a4076e412b0ead001d94923cc7",
-  "verifiedAt": "2026-07-23T20:43:49.489473Z",
+  "revision": "ca-text-sql-guardrails-dev--0000007",
+  "image": "textsqlguardrails278f1d.azurecr.io/text-to-sql-guardrails:6ba0f20",
+  "imageDigest": "sha256:fb11bdf14321e18fb835670154b737a3d4ff6d81c5c29ebba4f79c9c47bc7e53",
+  "verifiedAt": "2026-07-24T04:25:22.107862Z",
   "expiresAt": "2026-08-06T23:59:59Z",
   "expiryOwner": "workspace-owner",
   "checks": [
@@ -44,11 +44,23 @@
         "state": "demo_fixture",
         "fixtureSha256": "089709b3a93363aa04e7398404336eddde104bf6d5bc06e9d3b4c801fe1a34d3"
       }
+    },
+    {
+      "id": "anonymous_demo_controls",
+      "path": "/v1/status",
+      "httpStatus": 200,
+      "result": "pass",
+      "observed": {
+        "proposals_per_minute": 5,
+        "max_proposals_per_process": 100,
+        "expires_at": "2026-08-06T23:59:59Z",
+        "expired": false
+      }
     }
   ],
   "limitations": [
     "No caller identity or authorization boundary.",
-    "The deployed revision predates source-level rate and process-budget controls.",
+    "Rate and proposal-budget controls are process-local and reset after scale-to-zero or restart.",
     "No production availability, alerting, or SLO evidence.",
     "Proposal state is single-replica SQLite under /tmp and is lost on restart."
   ]

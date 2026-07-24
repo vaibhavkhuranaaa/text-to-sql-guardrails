@@ -28,10 +28,10 @@
   "deployment": {
     "provider": "Azure Container Apps",
     "status": "temporary-demo",
-    "runtime": "One-replica FastAPI container using the committed demo fixture and ephemeral SQLite proposal state",
+    "runtime": "Scale-to-zero FastAPI container using the committed demo fixture and ephemeral SQLite proposal state",
     "exposure": "anonymous",
     "productionClaim": false,
-    "verifiedAt": "2026-07-23T20:43:49.489473Z",
+    "verifiedAt": "2026-07-24T04:25:22.107862Z",
     "expiresAt": "2026-08-06T23:59:59Z",
     "evidenceRefs": [
       "deployment.temporary-demo",
@@ -42,7 +42,7 @@
     "18 of 18 deterministic local evaluation cases matched their expected trusted or refused outcome",
     "100% safety-rejection rate across the committed unsafe-policy evaluation cases",
     "100% hallucination-detection rate across the committed unknown-table and unknown-column cases",
-    "5 status-only public route checks passed on the temporary anonymous demo"
+    "6 status-only public route, fixture-boundary, and deployed-control checks passed on the temporary anonymous demo"
   ],
   "stages": [
     "Curated semantic catalog and explicit data classification",
@@ -68,8 +68,8 @@
   ],
   "operationalTradeoffs": [
     "Anonymous access makes recruiter review easy but provides no caller identity or authorization boundary",
-    "The deployed revision predates the new source-level rate and process-budget controls; publication remains blocked until a replacement revision proves them",
-    "SQLite under /tmp is appropriate only for the one-replica temporary demo because proposal state is lost on restart and cannot coordinate replicas",
+    "The deployed rate, proposal-budget, expiry, and counter controls are process-local and reset after scale-to-zero or restart",
+    "SQLite under /tmp is appropriate only for the zero-to-one-replica temporary demo because proposal state is lost on scale-to-zero or restart and cannot coordinate replicas",
     "The committed fixture keeps synthetic join identifiers internally, while model context and result previews exclude identifier-like fields",
     "Local latency and cost observations are not production SLO or cost claims"
   ],
@@ -109,10 +109,10 @@
     {
       "id": "deployment.temporary-demo",
       "kind": "deployment",
-      "claim": "Five status-only public route and fixture-boundary checks passed for the anonymous temporary demo.",
+      "claim": "Six status-only public route, fixture-boundary, and deployed-control checks passed for the anonymous temporary demo.",
       "source": "evidence/deployment/temporary-demo.json",
       "method": "HTTP checks with response bodies limited to status and disclosed fixture metadata",
-      "result": true
+      "result": "revision 0000007 / 6 checks passed"
     },
     {
       "id": "security.demo-fixture-boundary",
@@ -128,7 +128,7 @@
       "claim": "The container build context excludes raw source files and data/approved artifacts while retaining only the disclosed fixture and aggregate evidence.",
       "source": ".dockerignore and scripts/verify_container_boundary.py",
       "method": "Build the image and run the boundary verifier inside that image",
-      "result": "source gate added; replacement deployment pending"
+      "result": "verified in Azure-built image sha256:fb11bdf14321e18fb835670154b737a3d4ff6d81c5c29ebba4f79c9c47bc7e53"
     },
     {
       "id": "disclosure.synthetic-data",
@@ -153,7 +153,7 @@
     "scalabilityRoadmap": [
       "Replace ephemeral SQLite with an owner-approved transactional store and prove cross-replica single-use consumption",
       "Enable single-tenant Microsoft Entra authentication and verify unauthenticated denial",
-      "Deploy and verify the new rate, process-budget, expiry, and status counters in a replacement revision",
+      "Replace process-local rate and proposal budgets with durable distributed controls before multi-replica hosting",
       "Add alerting, budget ownership, availability/error monitoring, and an owner-approved load envelope",
       "Expand semantic evaluation with reviewer-approved equivalent SQL rather than literal query matching"
     ],
@@ -199,9 +199,9 @@
         ]
       },
       {
-        "value": "5/5",
+        "value": "6/6",
         "label": "public status-only checks",
-        "context": "Temporary anonymous demo routes and active fixture boundary.",
+        "context": "Temporary anonymous demo routes, active fixture boundary, and deployed control configuration.",
         "method": "Deployment verification record.",
         "evidenceRefs": [
           "deployment.temporary-demo",
@@ -211,7 +211,7 @@
     ],
     "limitations": [
       "The current endpoint is anonymous and has no caller authorization.",
-      "The deployed revision does not yet include the new source-level rate and process-budget controls.",
+      "The deployed rate and proposal-budget controls are process-local and reset after scale-to-zero or restart.",
       "Approval state is ephemeral and single-replica.",
       "The model can still propose semantically wrong SQL, so human review remains mandatory.",
       "The demo expiry requires owner teardown; the application cannot delete its own Azure resources."
@@ -237,7 +237,7 @@
       },
       {
         "role": "Cloud AI Engineer",
-        "bullet": "Delivered and verified a five-route Azure Container Apps demo with immutable revision and image-digest evidence while explicitly separating anonymous temporary exposure from production readiness.",
+        "bullet": "Delivered and verified a scale-to-zero Azure Container Apps demo with immutable revision, image-digest, fixture-boundary, and deployed-control evidence while explicitly separating anonymous exposure from production readiness.",
         "evidenceRefs": [
           "deployment.temporary-demo"
         ]
