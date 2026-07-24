@@ -69,6 +69,14 @@ jobs:
           revision="$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" --query properties.latestReadyRevisionName --output tsv)"
           fqdn="$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" --query properties.configuration.ingress.fqdn --output tsv)"
           expires_at="$(python -c 'import json; print(json.load(open("portfolio/project.json"))["deployment"]["expiresAt"])')"
+          for attempt in $(seq 1 30); do
+            payload="$(curl --fail --silent --show-error "https://$fqdn/v1/status" || true)"
+            if printf '%s' "$payload" | jq -e --arg sha "$SOURCE_SHA" '.source_sha == $sha' >/dev/null; then
+              break
+            fi
+            test "$attempt" -lt 30
+            sleep 10
+          done
           uv run python scripts/verify_deployment.py \
             --base-url "https://$fqdn" \
             --revision "$revision" \
