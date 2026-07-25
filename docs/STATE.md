@@ -4,8 +4,8 @@
 
 - Lifecycle: `maintained` portfolio project.
 - Deployment: anonymous, indefinite, non-production `live` demo on the existing Azure Container App.
-- Source: `3b5cd716e26ca499067aca823871aaf905c750bb` on `main`.
-- Deployment verification: GitHub Actions workflow `30145541675` deployed and verified that exact source SHA.
+- Source: `752e8e3c8d2b1f37a0b197a67e30ca4e4b840d9a` on `main`.
+- Deployment verification: GitHub Actions workflow `30146069699` deployed and verified that exact source SHA.
 - Portfolio publication: the public site verified and synchronized the project; its tracked catalog now records the same source SHA.
 - Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`.
 
@@ -65,12 +65,23 @@ The demo has no end-user login. Azure managed identity is used only for the serv
   repeatable-build verification. The raw and derived artifacts are subject to
   the documented 30-day local retention/deletion policy.
 
+## M4 private semantic evaluation candidate
+
+- Branch `strengthen-private-evaluation` adds a private, ignored aggregate-only
+  evaluator. It compares reviewed aggregate semantics across aggregation, joins,
+  time windows, null handling, currencies, labels, and existing resource bounds.
+- The generated report contains only the deterministic curated-content digest,
+  case/pass/fail counts, threshold, limitations, and disclosure. It never enters
+  the image, public demo, logs, or public evidence.
+- This candidate is not merged or deployed yet. M5 through M7 remain separately
+  owner-gated.
+
 ## Next safe action
 
-M2 is skipped under M0-A. M4 evaluation work remains a separate milestone;
-do not begin it without a new owner direction. Retain the existing proposal
-limits unless the owner separately authorizes a new bounded observation or
-policy change.
+M2 is skipped under M0-A. Complete the M4 review, merge, existing-target
+redeployment, and exact-SHA verification before considering any subsequent
+milestone. Retain the existing proposal limits unless the owner separately
+authorizes a new bounded observation or policy change.
 
 No new Azure resource, paid capacity, raw IBM data download, capacity change,
 user login, or Resume Creator change is authorized. The default remains one
