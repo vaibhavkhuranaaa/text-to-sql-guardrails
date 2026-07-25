@@ -27,7 +27,9 @@ env:
 
 jobs:
   deploy:
-    environment: anonymous-live-demo
+    # Keep this legacy GitHub Environment name: Azure's federated credential is bound to it.
+    # It is an OIDC binding only; the deployed application remains an anonymous live demo.
+    environment: temporary-demo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
