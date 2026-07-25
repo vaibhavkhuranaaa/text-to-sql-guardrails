@@ -129,6 +129,12 @@
         "implementation": "The public revision exposes rate, proposal-budget, and aggregate status controls.",
         "evidenceRefs": ["deployment.anonymous-live-demo", "security.demo-fixture-boundary"],
         "limitation": "Controls are process-local and reset after scale-to-zero or restart; there is no caller authorization."
+      },
+      {
+        "control": "Bounded operational observation",
+        "implementation": "The existing non-production target has a redacted owner notification route, a $30 monthly budget, and aggregate stderr and latency alerts.",
+        "evidenceRefs": ["operational.m6-alert-readiness"],
+        "limitation": "This creates no availability SLO, on-call rota, durable-state guarantee, or production claim."
       }
     ],
     "costBoundaries": [
@@ -249,6 +255,20 @@
       "source": "docs/HANDOFF.md",
       "method": "Status-level local integration verification using Microsoft Entra ID; no token, question, SQL, or rows retained",
       "result": "verified locally; not a public SLO"
+    },
+    {
+      "id": "operational.m6-alert-readiness",
+      "kind": "operational",
+      "claim": "The anonymous non-production target has a redacted owner notification route, bounded budget thresholds, and aggregate stderr and latency alerts.",
+      "source": "evidence/m6/operational-observation.json",
+      "method": "Read-only Azure configuration observation with recipient and log data excluded",
+      "result": "one enabled action group, $30 monthly budget, and two enabled five-minute scheduled-query alerts",
+      "scope": "Existing zero-to-one-replica Azure Container App demo",
+      "observedAt": "2026-07-25T21:57:52Z",
+      "environment": "Azure non-production demo",
+      "classification": "aggregate-only operational configuration",
+      "execution": "configuration observation",
+      "caveat": "Budgets do not prevent spend; alerts and process-local telemetry do not establish availability, SLO, or production readiness."
     }
   ],
   "story": {
