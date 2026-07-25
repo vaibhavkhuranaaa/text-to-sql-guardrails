@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` is `6c6cd48bd9e6faf802369338a6e2fe47c9333e79`; `docs/STATE.md` separately records the deployed, verified source SHA.
+Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` and deployed verified source are `6c6cd48bd9e6faf802369338a6e2fe47c9333e79`. The verified M1 candidate is `369fd727c5ce42572c85654a94e00a1a6afbe09b` on `scale-ready-m1-telemetry`, pushed but not merged.
 
 The demo is live, anonymous, indefinite, non-production, scale-to-zero, and backed only by the committed hand-authored synthetic fixture. Do not add login, caller authorization, real customer data, raw data to the image, a public database endpoint, or a production/SLA claim.
 
@@ -24,14 +24,20 @@ authorized until M3.
 
 **M1 — Low-cost proposal-path controls** in `docs/scale-ready-milestones.md`.
 
-Keep the public demo anonymous, scale-to-zero, and at one replica. The working
-tree adds aggregate-only, process-local proposal telemetry at `/v1/status`:
-proposal outcomes, provider-call counts, provider-reported token totals, and
-fixed latency buckets. Lifecycle logs are sampled status-only metadata with no
-identifiers or configured exporter. Observe an aggregate window before deciding
-whether to tighten the existing five-per-minute and 100-per-process limits.
-Do not provision Azure resources, alter capacity, download IBM data, add login,
-or edit Resume Creator.
+The candidate is fully verified locally: formatting, lint, 31 tests,
+deterministic evaluation generation, manifest validation, Docker Compose,
+built-container data-boundary verification, and `git diff --check`. Its
+aggregate-only, process-local telemetry adds proposal outcomes, provider-call
+counts, provider-reported token totals, and fixed latency buckets to
+`/v1/status`. Lifecycle logs are sampled status-only metadata with no
+identifiers or configured exporter.
+
+Next safe action: open/review the pushed branch's PR, merge it to `main`, then
+run the normal release verification and capture one bounded aggregate-only
+status observation. Only then decide whether to tighten the five-per-minute and
+100-per-process limits. M2 is skipped under M0-A; M3 still requires separate
+owner authorization before downloading IBM data. Do not provision resources,
+alter capacity, add login, or edit Resume Creator.
 
 ## Required verification
 

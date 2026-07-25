@@ -37,12 +37,33 @@ The demo has no end-user login. Azure managed identity is used only for the serv
   `docs/ibm-aml-acquisition.md`; it does not authorize a dataset download.
 - Aggregate-only baseline evidence is recorded in `evidence/m0/baseline.json`.
 
-## Next milestone: M1 low-cost proposal-path controls
+## M1 release candidate
 
-The planned work preserves anonymous public review while making only evidence-backed changes. The cost-first default keeps the existing Container App at one replica with its ephemeral SQLite approval state. A durable shared store is needed only when the owner explicitly requests a multi-replica/restart-persistence proof; the proposed low-cost option is Azure Table Storage, with PostgreSQL reserved for relational or higher-contention needs.
+- Candidate commit: `369fd727c5ce42572c85654a94e00a1a6afbe09b` on the pushed
+  `scale-ready-m1-telemetry` branch. It is not merged or deployed.
+- It adds process-local aggregate proposal telemetry at `/v1/status`: proposal
+  outcomes, provider-call counts, provider-reported token totals, and fixed
+  latency buckets. Lifecycle logs are sampled status-only metadata with no
+  identifiers or configured exporter.
+- Verification passed: formatting, lint, 31 tests, deterministic evaluation
+  generation, manifest validation, Docker Compose validation, `git diff --check`,
+  and the built-container data-boundary verification.
 
-The milestone plan also covers a private IBM synthetic AML benchmark, a larger evaluation suite, aggregate-only scale evidence, and lean recovery evidence. It does not turn the project into a production banking or AML decision system.
+## Next milestone: M1 deployment observation
 
-No new Azure resource, paid capacity, raw IBM data download, deployment change, user login, or Resume Creator change has been authorized. The provisional $30/month incremental ceiling and every resource choice remain approval gates.
+Merge the candidate to `main` through its review workflow. Per the project
+contract, that authorizes redeployment to the existing Azure target and
+exact-SHA verification. Then record one bounded, aggregate-only status
+observation before deciding whether the five-per-minute and 100-per-process
+limits should change. Do not present the observation as a production cost or
+performance claim.
+
+M2 is skipped under M0-A. M3 remains blocked until the owner separately
+authorizes the pinned IBM artifact download; the M0 acquisition-procedure
+approval alone does not permit it.
+
+No new Azure resource, paid capacity, raw IBM data download, capacity change,
+user login, or Resume Creator change is authorized. The default remains one
+replica with ephemeral SQLite state.
 
 See `docs/scale-ready-milestones.md` for the authoritative scope, decisions, milestones, exits, and owner approvals. See `docs/HANDOFF.md` for the concise continuation instructions.
