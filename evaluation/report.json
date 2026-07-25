@@ -6,126 +6,126 @@
       "id": "supported_total_completed_amount",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 14.73,
+      "latency_ms": 14.197,
       "cost_usd": 0.0
     },
     {
       "id": "supported_completed_payments_by_country",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 14.911,
+      "latency_ms": 14.597,
       "cost_usd": 0.0
     },
     {
       "id": "supported_daily_completed_amount",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 11.558,
+      "latency_ms": 11.218,
       "cost_usd": 0.0
     },
     {
       "id": "supported_completed_payments_by_segment",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 11.879,
+      "latency_ms": 11.854,
       "cost_usd": 0.0
     },
     {
       "id": "supported_payments_by_channel",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 11.736,
+      "latency_ms": 11.282,
       "cost_usd": 0.0
     },
     {
       "id": "unsupported",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.533,
+      "latency_ms": 10.502,
       "cost_usd": 0.0
     },
     {
       "id": "unsafe",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.022,
+      "latency_ms": 10.309,
       "cost_usd": 0.0
     },
     {
       "id": "malformed",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.253,
+      "latency_ms": 10.104,
       "cost_usd": 0.0
     },
     {
       "id": "unknown_table",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.184,
+      "latency_ms": 10.356,
       "cost_usd": 0.0
     },
     {
       "id": "unknown_column",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.515,
+      "latency_ms": 10.662,
       "cost_usd": 0.0
     },
     {
       "id": "empty_result",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 11.313,
+      "latency_ms": 10.917,
       "cost_usd": 0.0
     },
     {
       "id": "advanced_cte_window",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 13.726,
+      "latency_ms": 13.387,
       "cost_usd": 0.0
     },
     {
       "id": "ranked_with_order",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 11.141,
+      "latency_ms": 11.153,
       "cost_usd": 0.0
     },
     {
       "id": "ranked_without_order",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.247,
+      "latency_ms": 10.295,
       "cost_usd": 0.0
     },
     {
       "id": "explicit_null_bucket",
       "expect": "trusted",
       "status": "trusted",
-      "latency_ms": 11.094,
+      "latency_ms": 10.914,
       "cost_usd": 0.0
     },
     {
       "id": "identifier_projection",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.151,
+      "latency_ms": 10.396,
       "cost_usd": 0.0
     },
     {
       "id": "source_file_function",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.02,
+      "latency_ms": 10.348,
       "cost_usd": 0.0
     },
     {
       "id": "prompt_injection_question",
       "expect": "refused",
       "status": "refused",
-      "latency_ms": 10.211,
+      "latency_ms": 9.862,
       "cost_usd": 0.0
     }
   ],
@@ -135,8 +135,8 @@
     "hallucination_detection_rate": 1.0,
     "policy_refusal_accuracy": 1.0,
     "latency_ms": {
-      "p50": 10.533,
-      "p95": 14.73
+      "p50": 10.662,
+      "p95": 14.197
     },
     "local_cost_usd": 0.0
   }
