@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` and deployed verified source are `397b42666f3d999e33e66b0e7eae413b2f9569fa`.
+Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` and deployed verified source are `3b5cd716e26ca499067aca823871aaf905c750bb`.
 
 The demo is live, anonymous, indefinite, non-production, scale-to-zero, and backed only by the committed hand-authored synthetic fixture. Do not add login, caller authorization, real customer data, raw data to the image, a public database endpoint, or a production/SLA claim.
 
@@ -31,9 +31,20 @@ The row-free, aggregate-only status observation is recorded in
 It observed zero post-deployment proposal traffic, so it confirms the telemetry
 contract and existing five-per-minute / 100-per-process envelope but provides no
 evidence for changing either limit. Retain both limits unless separately
-authorized. M2 is skipped under M0-A; M3 still requires separate owner
-authorization before downloading IBM data. Do not provision resources, alter
-capacity, add login, or edit Resume Creator.
+authorized.
+
+## M3 private benchmark evidence
+
+The owner authorized the pinned IBM version-8 acquisition. The local raw files,
+identifier-free DuckDB derivative, and row-free benchmark report are ignored by
+Git and container builds. `data/ibm_aml_manifest.json` pins version, license,
+byte counts, and SHA-256 digests; `scripts/build_ibm_aml_benchmark.py` verifies
+them and creates the seven-field private derivative without account or bank
+fields. The derivative uses a deterministic curated-content digest for
+repeatability. Keep the 30-day local retention/deletion policy in effect.
+
+M2 is skipped under M0-A. M4 remains a separate owner-directed milestone. Do
+not provision resources, alter capacity, add login, or edit Resume Creator.
 
 ## Required verification
 
