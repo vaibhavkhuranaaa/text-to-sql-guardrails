@@ -410,6 +410,7 @@ def test_foundry_uses_entra_bearer_token_not_api_key(monkeypatch):
     assert proposal.output_tokens == 9
     assert captured["request"].full_url.endswith("/openai/v1/chat/completions")
     assert json.loads(captured["request"].data)["model"] == "guarded-model"
+    assert json.loads(captured["request"].data)["max_completion_tokens"] == 2048
     assert captured["request"].get_header("Authorization") == "Bearer test-entraid-token"
     assert captured["request"].get_header("Api-key") is None
 
