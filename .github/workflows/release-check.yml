@@ -1,4 +1,4 @@
-name: Verify temporary demo release
+name: Verify anonymous live demo release
 
 on:
   workflow_dispatch:
@@ -23,21 +23,17 @@ on:
         description: Immutable sha256 image digest
         required: true
         type: string
-      expires_at:
-        description: Owner-controlled expiry in ISO-8601 UTC
-        required: true
-        type: string
 
 permissions:
   contents: read
 
 concurrency:
-  group: text-to-sql-temporary-demo-verification
+  group: text-to-sql-anonymous-live-verification
   cancel-in-progress: false
 
 jobs:
   verify:
-    environment: temporary-demo-verification
+    environment: anonymous-live-demo-verification
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -58,11 +54,9 @@ jobs:
           --revision "${{ inputs.revision }}"
           --image "${{ inputs.image }}"
           --digest "${{ inputs.image_digest }}"
-          --expires-at "${{ inputs.expires_at }}"
-          --owner "${{ github.actor }}"
-          --out artifacts/temporary-demo-verification.json
+          --out artifacts/anonymous-live-demo-verification.json
       - uses: actions/upload-artifact@v4
         with:
-          name: text-to-sql-demo-verification-${{ github.sha }}
-          path: artifacts/temporary-demo-verification.json
+          name: text-to-sql-anonymous-live-verification-${{ github.sha }}
+          path: artifacts/anonymous-live-demo-verification.json
           if-no-files-found: error

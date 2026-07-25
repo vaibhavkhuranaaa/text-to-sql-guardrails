@@ -8,7 +8,6 @@ import threading
 import time
 from collections import defaultdict, deque
 from dataclasses import dataclass
-from datetime import UTC, datetime
 
 from .observability import event
 
@@ -21,23 +20,19 @@ class GateDecision:
 
 
 class ProposalGate:
-    """Per-process guardrail for a temporary, single-replica anonymous demo."""
+    """Per-process guardrail for an anonymous, single-replica demo."""
 
     def __init__(
         self,
         *,
         proposals_per_minute: int | None = None,
         max_proposals_per_process: int | None = None,
-        expires_at: str | None = None,
     ) -> None:
         self.proposals_per_minute = proposals_per_minute or int(
             os.getenv("GUARDRAILS_PROPOSALS_PER_MINUTE", "20")
         )
         self.max_proposals_per_process = max_proposals_per_process or int(
             os.getenv("GUARDRAILS_MAX_PROPOSALS_PER_PROCESS", "100")
-        )
-        self.expires_at = (
-            expires_at if expires_at is not None else os.getenv("GUARDRAILS_DEMO_EXPIRES_AT")
         )
         self._requests: dict[str, deque[float]] = defaultdict(deque)
         self._accepted = 0
@@ -49,17 +44,9 @@ class ProposalGate:
     def _client_key(client: str | None) -> str:
         return hashlib.sha256((client or "unknown").encode()).hexdigest()[:16]
 
-    def _expired(self) -> bool:
-        if not self.expires_at:
-            return False
-        return datetime.now(UTC) >= datetime.fromisoformat(self.expires_at.replace("Z", "+00:00"))
-
     def check(self, client: str | None) -> GateDecision:
         client_key = self._client_key(client)
         with self._lock:
-            if self._expired():
-                event("demo_expired", client_key=client_key)
-                return GateDecision(False, 410, "The temporary demo has expired.")
             if self._accepted >= self.max_proposals_per_process:
                 self._budget_refused += 1
                 event(
@@ -68,7 +55,7 @@ class ProposalGate:
                     accepted=self._accepted,
                     process_budget=self.max_proposals_per_process,
                 )
-                return GateDecision(False, 429, "The temporary demo proposal budget is exhausted.")
+                return GateDecision(False, 429, "The demo proposal budget is exhausted.")
 
             now = time.monotonic()
             requests = self._requests[client_key]
@@ -87,12 +74,10 @@ class ProposalGate:
     def status(self) -> dict:
         with self._lock:
             return {
-                "scope": "single process; temporary demo only",
+                "scope": "single process; anonymous demo",
                 "proposals_per_minute": self.proposals_per_minute,
                 "max_proposals_per_process": self.max_proposals_per_process,
                 "accepted_since_start": self._accepted,
                 "rate_limited_since_start": self._rate_limited,
                 "budget_refused_since_start": self._budget_refused,
-                "expires_at": self.expires_at,
-                "expired": self._expired(),
             }

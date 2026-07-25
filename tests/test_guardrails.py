@@ -60,6 +60,7 @@ def test_console_and_snapshot_status_are_visible_without_source_rows():
 def test_deployment_bootstrap_contract_and_runtime_assets_are_packaged():
     dockerfile = (Path(__file__).parents[1] / "Dockerfile").read_text(encoding="utf-8")
     assert "ENV GUARDRAILS_ASSET_ROOT=/app" in dockerfile
+    assert "GUARDRAILS_DEMO_EXPIRES_AT" not in dockerfile
     assert "COPY data ./data" in dockerfile
     assert "COPY evaluation ./evaluation" in dockerfile
     dockerignore = (Path(__file__).parents[1] / ".dockerignore").read_text(encoding="utf-8")
@@ -74,7 +75,7 @@ def test_deployment_bootstrap_contract_and_runtime_assets_are_packaged():
     assert examples.json()["examples"]
 
 
-def test_anonymous_demo_gate_enforces_rate_budget_and_expiry(monkeypatch):
+def test_anonymous_demo_gate_enforces_rate_and_proposal_budget():
     gate = ProposalGate(proposals_per_minute=1, max_proposals_per_process=2)
     assert gate.check("203.0.113.10").allowed
     limited = gate.check("203.0.113.10")
@@ -88,21 +89,8 @@ def test_anonymous_demo_gate_enforces_rate_budget_and_expiry(monkeypatch):
     assert not exhausted.allowed
     assert "budget" in exhausted.reason
 
-    monkeypatch.setattr(
-        "guardrails.limits.datetime",
-        SimpleNamespace(
-            now=lambda _timezone: __import__("datetime").datetime(
-                2026, 8, 7, tzinfo=__import__("datetime").UTC
-            ),
-            fromisoformat=__import__("datetime").datetime.fromisoformat,
-        ),
-    )
-    expired = ProposalGate(
-        proposals_per_minute=1,
-        max_proposals_per_process=1,
-        expires_at="2026-08-06T23:59:59Z",
-    ).check("client")
-    assert expired.status_code == 410
+    assert "expires_at" not in gate.status()
+    assert "expired" not in gate.status()
 
 
 def test_educational_examples_and_curated_preview_are_available():

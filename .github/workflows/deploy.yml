@@ -15,7 +15,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: text-to-sql-temporary-demo-release
+  group: text-to-sql-anonymous-live-release
   cancel-in-progress: false
 
 env:
@@ -27,7 +27,7 @@ env:
 
 jobs:
   deploy:
-    environment: temporary-demo
+    environment: anonymous-live-demo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -68,7 +68,6 @@ jobs:
             --output none
           revision="$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" --query properties.latestReadyRevisionName --output tsv)"
           fqdn="$(az containerapp show --resource-group "$RESOURCE_GROUP" --name "$CONTAINER_APP" --query properties.configuration.ingress.fqdn --output tsv)"
-          expires_at="$(python -c 'import json; print(json.load(open("portfolio/project.json"))["deployment"]["expiresAt"])')"
           for attempt in $(seq 1 30); do
             payload="$(curl --fail --silent --show-error "https://$fqdn/v1/status" || true)"
             if printf '%s' "$payload" | jq -e --arg sha "$SOURCE_SHA" '.source_sha == $sha' >/dev/null; then
@@ -82,8 +81,6 @@ jobs:
             --revision "$revision" \
             --image "$image" \
             --digest "$digest" \
-            --expires-at "$expires_at" \
-            --owner "${{ github.actor }}" \
             --source-sha "$SOURCE_SHA" \
             --out artifacts/release-receipt.json
       - uses: actions/upload-artifact@v4

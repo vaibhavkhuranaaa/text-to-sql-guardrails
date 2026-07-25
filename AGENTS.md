@@ -5,7 +5,7 @@
 - Current implementation state: `docs/STATE.md`.
 - Continuation instructions: `docs/HANDOFF.md`.
 - Public facts, evidence, deployment classification, and résumé candidates: `portfolio/project.json`.
-- Structured deployment observation: `evidence/deployment/temporary-demo.json`.
+- Structured deployment observation: `evidence/deployment/anonymous-live-demo.json`.
 - Dataset source, license, checksums, and classification: `data/PROVENANCE.md` and `data/source_manifest.json`.
 - Generated evaluation: `evaluation/report.json`; source is `scripts/run_evaluation.py`.
 
@@ -22,4 +22,4 @@
 
 ## Required checks
 
-Run formatting, lint, tests, evaluation generation, manifest first-demo validation, Docker Compose validation, the container data-boundary check, and `git diff --check`. Publication stays blocked while `githubUrl` is null or the temporary-demo limitations remain unresolved.
+Run formatting, lint, tests, evaluation generation, manifest validation, Docker Compose validation, the container data-boundary check, and `git diff --check`. Publication stays blocked while `githubUrl` is null or the anonymous-demo limitations are unresolved.

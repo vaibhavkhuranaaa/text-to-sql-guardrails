@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -111,11 +110,6 @@ if args.profile != "draft":
         assert Path(item["source"].split(" and ")[0]).exists(), (
             f"missing evidence source: {item['source']}"
         )
-    if deployment["status"] == "temporary-demo":
-        require(deployment, ["expiresAt", "verifiedAt", "evidenceRefs"], "temporary demo")
-        expires_at = datetime.fromisoformat(deployment["expiresAt"].replace("Z", "+00:00"))
-        assert expires_at > datetime.now(UTC), "temporary demo has expired"
-
 if args.profile in {"publication", "live"}:
     assert http_url(manifest["githubUrl"]), "publication requires githubUrl"
     require(manifest.get("resume", {}), ["bulletCandidates"], "publication resume")

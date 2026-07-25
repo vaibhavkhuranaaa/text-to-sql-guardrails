@@ -27,14 +27,13 @@
   "liveUrl": "https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io",
   "deployment": {
     "provider": "Azure Container Apps",
-    "status": "temporary-demo",
+    "status": "live",
     "runtime": "Scale-to-zero FastAPI container using the committed demo fixture and ephemeral SQLite proposal state",
     "exposure": "anonymous",
     "productionClaim": false,
     "verifiedAt": "2026-07-24T04:25:22.107862Z",
-    "expiresAt": "2026-08-06T23:59:59Z",
     "evidenceRefs": [
-      "deployment.temporary-demo",
+      "deployment.anonymous-live-demo",
       "security.demo-fixture-boundary"
     ]
   },
@@ -42,7 +41,7 @@
     "18 of 18 deterministic local evaluation cases matched their expected trusted or refused outcome",
     "100% safety-rejection rate across the committed unsafe-policy evaluation cases",
     "100% hallucination-detection rate across the committed unknown-table and unknown-column cases",
-    "6 status-only public route, fixture-boundary, and deployed-control checks passed on the temporary anonymous demo"
+    "6 status-only public route, fixture-boundary, and deployed-control checks passed on the anonymous live demo"
   ],
   "stages": [
     "Curated semantic catalog and explicit data classification",
@@ -53,7 +52,7 @@
     "Bounded result preview with privacy-preserving lifecycle events"
   ],
   "architecture": [
-    "Anonymous temporary analyst console",
+    "Anonymous live analyst console",
     "FastAPI proposal and approval APIs",
     "Azure OpenAI proposal adapter using managed identity",
     "SQLGlot policy engine and DuckDB EXPLAIN",
@@ -68,18 +67,18 @@
   ],
   "operationalTradeoffs": [
     "Anonymous access makes recruiter review easy but provides no caller identity or authorization boundary",
-    "The deployed rate, proposal-budget, expiry, and counter controls are process-local and reset after scale-to-zero or restart",
-    "SQLite under /tmp is appropriate only for the zero-to-one-replica temporary demo because proposal state is lost on scale-to-zero or restart and cannot coordinate replicas",
+    "The deployed rate, proposal-budget, and counter controls are process-local and reset after scale-to-zero or restart",
+    "SQLite under /tmp is appropriate only for the zero-to-one-replica anonymous demo because proposal state is lost on scale-to-zero or restart and cannot coordinate replicas",
     "The committed fixture keeps synthetic join identifiers internally, while model context and result previews exclude identifier-like fields",
     "Local latency and cost observations are not production SLO or cost claims"
   ],
-  "disclaimer": "Temporary anonymous, non-production demonstration using synthetic data only. It is not a bank system, fraud decision service, security posture, availability claim, or production-readiness claim.",
+  "disclaimer": "Anonymous, non-production demonstration using synthetic data only. It is not a bank system, fraud decision service, security posture, availability claim, or production-readiness claim.",
   "presentation": {
     "question": "How can analysts use natural-language SQL proposals without letting model output execute unchecked?",
     "answer": "Separate proposal from execution, expose assumptions and lineage, enforce parser-backed policy, require short-lived human approval, and revalidate before one bounded read-only preview.",
     "decisionSupported": "Whether a proposed analytical query is within the classified schema and safe enough for one reviewed execution.",
     "architectureAlt": "System architecture showing an analyst, synthetic data and semantic catalog, FastAPI proposal and approval interfaces, Azure OpenAI, SQLGlot and DuckDB validation, ephemeral approval storage, read-only execution, privacy boundary, telemetry, deployment controls, and evaluation.",
-    "evaluationMode": "deterministic local policy evaluation plus live status-only integration checks on a temporary demo",
+    "evaluationMode": "deterministic local policy evaluation plus live status-only integration checks on an anonymous demo",
     "publicationStatus": "review_required",
     "technologyRoles": {
       "Python": "Service, policy, data, and evaluation language",
@@ -126,17 +125,17 @@
         "limitation": "Approval state is ephemeral SQLite and is not durable across restarts or replicas."
       },
       {
-        "control": "Temporary-demo controls",
-        "implementation": "The public revision exposes rate, proposal-budget, expiry, and aggregate status controls.",
-        "evidenceRefs": ["deployment.temporary-demo", "security.demo-fixture-boundary"],
+        "control": "Anonymous-demo controls",
+        "implementation": "The public revision exposes rate, proposal-budget, and aggregate status controls.",
+        "evidenceRefs": ["deployment.anonymous-live-demo", "security.demo-fixture-boundary"],
         "limitation": "Controls are process-local and reset after scale-to-zero or restart; there is no caller authorization."
       }
     ],
     "costBoundaries": [
       {
         "component": "Azure Container Apps",
-        "boundary": "Consumption profile with zero-to-one replicas and an owner-controlled expiry.",
-        "implication": "The demo can cold start and must be reviewed or torn down by the recorded expiry; no availability SLO is claimed."
+        "boundary": "Consumption profile with zero-to-one replicas and no automatic expiry.",
+        "implication": "The demo can cold start; no availability SLO is claimed."
       },
       {
         "component": "Azure OpenAI",
@@ -205,15 +204,15 @@
       "counts": { "total": 18, "passed": 18, "failed": 0 }
     },
     {
-      "id": "deployment.temporary-demo",
+      "id": "deployment.anonymous-live-demo",
       "kind": "deployment",
-      "claim": "Six status-only public route, fixture-boundary, and deployed-control checks passed for the anonymous temporary demo.",
-      "source": "evidence/deployment/temporary-demo.json",
+      "claim": "Six status-only public route, fixture-boundary, and deployed-control checks passed for the anonymous live demo.",
+      "source": "evidence/deployment/anonymous-live-demo.json",
       "method": "HTTP checks with response bodies limited to status and disclosed fixture metadata",
       "result": "revision 0000007 / 6 checks passed",
       "scope": "Root, evaluation, examples, safe preview, active fixture boundary, and deployed control configuration",
       "observedAt": "2026-07-24T04:25:22Z",
-      "environment": "Azure Container Apps temporary anonymous demo",
+      "environment": "Azure Container Apps anonymous live demo",
       "classification": "synthetic",
       "execution": "live",
       "caveat": "Status-only checks do not establish availability, caller authorization, durable limits, or production readiness.",
@@ -223,7 +222,7 @@
       "id": "security.demo-fixture-boundary",
       "kind": "security",
       "claim": "The active public revision reports the committed demo fixture, not the local approved snapshot.",
-      "source": "evidence/deployment/temporary-demo.json",
+      "source": "evidence/deployment/anonymous-live-demo.json",
       "method": "Verified /v1/status snapshot state and fixture SHA-256",
       "result": "demo_fixture"
     },
@@ -288,7 +287,7 @@
       },
       {
         "technology": "Ephemeral SQLite approval store",
-        "rationale": "Provides five-minute single-use approval persistence for a one-replica temporary demo.",
+        "rationale": "Provides five-minute single-use approval persistence for a one-replica anonymous demo.",
         "alternative": "Managed transactional database",
         "tradeoff": "Simple and low-cost, but restart-sensitive and unsuitable for protected multi-replica hosting."
       }
@@ -306,10 +305,10 @@
       {
         "value": "6/6",
         "label": "public status-only checks",
-        "context": "Temporary anonymous demo routes, active fixture boundary, and deployed control configuration.",
+        "context": "Anonymous live demo routes, active fixture boundary, and deployed control configuration.",
         "method": "Deployment verification record.",
         "evidenceRefs": [
-          "deployment.temporary-demo",
+          "deployment.anonymous-live-demo",
           "security.demo-fixture-boundary"
         ]
       }
@@ -319,7 +318,7 @@
       "The deployed rate and proposal-budget controls are process-local and reset after scale-to-zero or restart.",
       "Approval state is ephemeral and single-replica.",
       "The model can still propose semantically wrong SQL, so human review remains mandatory.",
-      "The demo expiry requires owner teardown; the application cannot delete its own Azure resources."
+      "The anonymous demo has no automatic expiry; the owner remains responsible for ongoing cost and operational review."
     ]
   },
   "resume": {
@@ -344,7 +343,7 @@
         "role": "Cloud AI Engineer",
         "bullet": "Delivered and verified a scale-to-zero Azure Container Apps demo with immutable revision, image-digest, fixture-boundary, and deployed-control evidence while explicitly separating anonymous exposure from production readiness.",
         "evidenceRefs": [
-          "deployment.temporary-demo"
+          "deployment.anonymous-live-demo"
         ]
       }
     ]
