@@ -82,9 +82,12 @@ The demo has no end-user login. Azure managed identity is used only for the serv
 
 ## Next safe action
 
-M2 is skipped under M0-A and M4 is complete. M5 requires separate explicit
-owner approval for a bounded private scale-validation run; retain the existing
-proposal limits unless the owner separately authorizes a policy change.
+M2 is skipped under M0-A and M4 is complete. The M5 local-only readiness
+candidate exercises private volume and bounded deterministic service concurrency
+without provider calls or public traffic. It is not a complete load envelope:
+approval expiry, durable contention, scaling, and paid model traffic remain
+blocked by the unapproved incremental-cost ceiling. Retain the existing proposal
+limits unless the owner separately authorizes a policy change.
 
 No new Azure resource, paid capacity, raw IBM data download, capacity change,
 user login, or Resume Creator change is authorized. The default remains one
