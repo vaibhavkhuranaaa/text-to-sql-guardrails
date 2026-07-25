@@ -4,8 +4,8 @@
 
 - Lifecycle: `maintained` portfolio project.
 - Deployment: anonymous, indefinite, non-production `live` demo on the existing Azure Container App.
-- Source: `397b42666f3d999e33e66b0e7eae413b2f9569fa` on `main`.
-- Deployment verification: GitHub Actions workflow `30145269339` deployed and verified that exact source SHA.
+- Source: `3b5cd716e26ca499067aca823871aaf905c750bb` on `main`.
+- Deployment verification: GitHub Actions workflow `30145541675` deployed and verified that exact source SHA.
 - Portfolio publication: the public site verified and synchronized the project; its tracked catalog now records the same source SHA.
 - Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`.
 
@@ -54,11 +54,23 @@ The demo has no end-user login. Azure managed identity is used only for the serv
   generation, manifest validation, presentation validation, Docker Compose,
   `git diff --check`, and the built-container data-boundary verification.
 
+## M3 private IBM benchmark
+
+- The owner authorized the pinned version-8 IBM AML artifact acquisition.
+- The two approved artifacts are checksum-locked in `data/ibm_aml_manifest.json`.
+  Raw files, the identifier-free private DuckDB derivative, and row-free local
+  benchmark evidence remain ignored by Git and excluded from container builds.
+- The private derivative excludes account and bank fields, retains only approved
+  analytical fields, and uses a deterministic curated-content digest for
+  repeatable-build verification. The raw and derived artifacts are subject to
+  the documented 30-day local retention/deletion policy.
+
 ## Next safe action
 
-Retain the existing limits unless the owner separately authorizes a new bounded
-observation or a policy change. M2 is skipped under M0-A; M3 remains blocked
-until the owner separately authorizes the pinned IBM artifact download.
+M2 is skipped under M0-A. M4 evaluation work remains a separate milestone;
+do not begin it without a new owner direction. Retain the existing proposal
+limits unless the owner separately authorizes a new bounded observation or
+policy change.
 
 No new Azure resource, paid capacity, raw IBM data download, capacity change,
 user login, or Resume Creator change is authorized. The default remains one

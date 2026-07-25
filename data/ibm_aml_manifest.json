@@ -1,0 +1,22 @@
+{
+  "dataset": "IBM Transactions for Anti Money Laundering (AML)",
+  "provider": "Kaggle",
+  "provider_ref": "ealtman2019/ibm-transactions-for-anti-money-laundering-aml",
+  "version": 8,
+  "versioned_url": "https://www.kaggle.com/datasets/ealtman2019/ibm-transactions-for-anti-money-laundering-aml/versions/8",
+  "provider_version_date": "2025-07-08",
+  "license": "Community Data License Agreement - Sharing - Version 1.0",
+  "files": [
+    {
+      "name": "HI-Small_Trans.csv",
+      "bytes": 475664283,
+      "sha256": "b19d39f515523373f991b689c07e11e7b0b95c17a2c27a87d91584ae16c5b040"
+    },
+    {
+      "name": "HI-Small_Patterns.txt",
+      "bytes": 323844,
+      "sha256": "2c546b5ce6009e73851f0139af053cf845f08bf92f3bc82fe1eb937dec2ef39b"
+    }
+  ],
+  "acquisition_policy": "Private local-only benchmark source. Files and derivatives are ignored by Git and excluded from the container image. Retain row-free provenance only; delete local raw and derived artifacts after 30 days."
+}
