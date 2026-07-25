@@ -1,0 +1,21 @@
+{
+  "evidence_id": "m4-deployment-observation-2026-07-25",
+  "observed_at_utc": "2026-07-25T06:03:38Z",
+  "source_sha": "05cfcdf79c1cebfdd000a5c1955ed698157eba81",
+  "deployment_workflow_run": "30146749371",
+  "endpoint_classification": "anonymous non-production demo",
+  "snapshot_state": "demo_fixture",
+  "proposal_limits": {
+    "per_minute": 5,
+    "per_process": 100
+  },
+  "aggregate_observation": {
+    "accepted_since_start": 0,
+    "rate_limited_since_start": 0,
+    "budget_refused_since_start": 0,
+    "model_calls_attempted_since_start": 0,
+    "model_calls_succeeded_since_start": 0,
+    "model_calls_failed_since_start": 0
+  },
+  "disclosure": "One bounded aggregate-only status observation. No questions, SQL, rows, identifiers, tokens, trace IDs, or environment values are retained. This is not a production cost or performance claim."
+}

@@ -4,8 +4,8 @@
 
 - Lifecycle: `maintained` portfolio project.
 - Deployment: anonymous, indefinite, non-production `live` demo on the existing Azure Container App.
-- Source: `752e8e3c8d2b1f37a0b197a67e30ca4e4b840d9a` on `main`.
-- Deployment verification: GitHub Actions workflow `30146069699` deployed and verified that exact source SHA.
+- Last verified application release: `05cfcdf79c1cebfdd000a5c1955ed698157eba81` on `main`.
+- Deployment verification: GitHub Actions workflow `30146749371` deployed and verified that exact release SHA.
 - Portfolio publication: the public site verified and synchronized the project; its tracked catalog now records the same source SHA.
 - Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`.
 
@@ -65,23 +65,26 @@ The demo has no end-user login. Azure managed identity is used only for the serv
   repeatable-build verification. The raw and derived artifacts are subject to
   the documented 30-day local retention/deletion policy.
 
-## M4 private semantic evaluation candidate
+## M4 private semantic evaluation
 
-- Branch `strengthen-private-evaluation` adds a private, ignored aggregate-only
-  evaluator. It compares reviewed aggregate semantics across aggregation, joins,
+- M4 merged as `05cfcdf79c1cebfdd000a5c1955ed698157eba81` and the existing Azure
+  target live-verified that exact release SHA in workflow `30146749371`.
+- It adds a private, ignored aggregate-only evaluator. It compares reviewed
+  aggregate semantics across aggregation, joins,
   time windows, null handling, currencies, labels, and existing resource bounds.
 - The generated report contains only the deterministic curated-content digest,
   case/pass/fail counts, threshold, limitations, and disclosure. It never enters
   the image, public demo, logs, or public evidence.
-- This candidate is not merged or deployed yet. M5 through M7 remain separately
-  owner-gated.
+- The local M4 evaluation passed all seven checks. The bounded aggregate-only
+  deployment observation is recorded in `evidence/m4/deployment-observation.json`;
+  it retains the existing five-per-minute and 100-per-process limits unchanged.
+- M5 through M7 remain separately owner-gated.
 
 ## Next safe action
 
-M2 is skipped under M0-A. Complete the M4 review, merge, existing-target
-redeployment, and exact-SHA verification before considering any subsequent
-milestone. Retain the existing proposal limits unless the owner separately
-authorizes a new bounded observation or policy change.
+M2 is skipped under M0-A and M4 is complete. M5 requires separate explicit
+owner approval for a bounded private scale-validation run; retain the existing
+proposal limits unless the owner separately authorizes a policy change.
 
 No new Azure resource, paid capacity, raw IBM data download, capacity change,
 user login, or Resume Creator change is authorized. The default remains one
