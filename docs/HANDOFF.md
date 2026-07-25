@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` and deployed verified source are `3b5cd716e26ca499067aca823871aaf905c750bb`.
+Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` and deployed verified source are `752e8e3c8d2b1f37a0b197a67e30ca4e4b840d9a`.
 
 The demo is live, anonymous, indefinite, non-production, scale-to-zero, and backed only by the committed hand-authored synthetic fixture. Do not add login, caller authorization, real customer data, raw data to the image, a public database endpoint, or a production/SLA claim.
 
@@ -43,8 +43,11 @@ them and creates the seven-field private derivative without account or bank
 fields. The derivative uses a deterministic curated-content digest for
 repeatability. Keep the 30-day local retention/deletion policy in effect.
 
-M2 is skipped under M0-A. M4 remains a separate owner-directed milestone. Do
-not provision resources, alter capacity, add login, or edit Resume Creator.
+M2 is skipped under M0-A. The owner has now authorized M4. The candidate on
+`strengthen-private-evaluation` produces an ignored aggregate-only private
+report covering reviewed aggregate semantics and resource bounds. Review,
+merge, and exact-SHA verify that release before M5. Do not provision resources,
+alter capacity, add login, or edit Resume Creator.
 
 ## Required verification
 
