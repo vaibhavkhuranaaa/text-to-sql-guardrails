@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` and deployed verified source are `6c6cd48bd9e6faf802369338a6e2fe47c9333e79`. The verified M1 candidate is `369fd727c5ce42572c85654a94e00a1a6afbe09b` on `scale-ready-m1-telemetry`, pushed but not merged.
+Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. Current `main` and deployed verified source are `397b42666f3d999e33e66b0e7eae413b2f9569fa`.
 
 The demo is live, anonymous, indefinite, non-production, scale-to-zero, and backed only by the committed hand-authored synthetic fixture. Do not add login, caller authorization, real customer data, raw data to the image, a public database endpoint, or a production/SLA claim.
 
@@ -20,24 +20,20 @@ baseline evidence is in `evidence/m0/baseline.json`. The IBM acquisition
 procedure in `docs/ibm-aml-acquisition.md` is approved, but no data download is
 authorized until M3.
 
-## Active milestone
+## M1 deployment evidence
 
-**M1 — Low-cost proposal-path controls** in `docs/scale-ready-milestones.md`.
+M1 telemetry merged and deployed in `397b42666f3d999e33e66b0e7eae413b2f9569fa`.
+Release workflow `30145269339` passed its exact-SHA, required-check,
+container-boundary, immutable-image, deployment, and live-verification gates.
+The row-free, aggregate-only status observation is recorded in
+`evidence/m1/deployment-observation.json`.
 
-The candidate is fully verified locally: formatting, lint, 31 tests,
-deterministic evaluation generation, manifest validation, Docker Compose,
-built-container data-boundary verification, and `git diff --check`. Its
-aggregate-only, process-local telemetry adds proposal outcomes, provider-call
-counts, provider-reported token totals, and fixed latency buckets to
-`/v1/status`. Lifecycle logs are sampled status-only metadata with no
-identifiers or configured exporter.
-
-Next safe action: open/review the pushed branch's PR, merge it to `main`, then
-run the normal release verification and capture one bounded aggregate-only
-status observation. Only then decide whether to tighten the five-per-minute and
-100-per-process limits. M2 is skipped under M0-A; M3 still requires separate
-owner authorization before downloading IBM data. Do not provision resources,
-alter capacity, add login, or edit Resume Creator.
+It observed zero post-deployment proposal traffic, so it confirms the telemetry
+contract and existing five-per-minute / 100-per-process envelope but provides no
+evidence for changing either limit. Retain both limits unless separately
+authorized. M2 is skipped under M0-A; M3 still requires separate owner
+authorization before downloading IBM data. Do not provision resources, alter
+capacity, add login, or edit Resume Creator.
 
 ## Required verification
 

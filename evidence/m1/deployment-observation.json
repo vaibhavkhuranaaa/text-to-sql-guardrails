@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "kind": "m1-aggregate-only-deployment-observation",
+  "observedAt": "2026-07-25T05:12:36Z",
+  "scope": {
+    "deployment": "anonymous, non-production Azure Container App demo",
+    "topology": "scale-to-zero; one replica maximum; ephemeral SQLite approval state",
+    "dataset": "committed hand-authored synthetic demo fixture only"
+  },
+  "release": {
+    "sourceSha": "397b42666f3d999e33e66b0e7eae413b2f9569fa",
+    "workflow": "30145269339",
+    "result": "exact-SHA deployment and live verification passed"
+  },
+  "liveStatus": {
+    "snapshotState": "demo_fixture",
+    "fixtureSha256": "089709b3a93363aa04e7398404336eddde104bf6d5bc06e9d3b4c801fe1a34d3",
+    "proposalGate": {
+      "scope": "single process; anonymous demo",
+      "proposalsPerMinute": 5,
+      "maxProposalsPerProcess": 100,
+      "acceptedSinceStart": 0,
+      "rateLimitedSinceStart": 0,
+      "budgetRefusedSinceStart": 0
+    },
+    "proposalTelemetry": {
+      "scope": "single process; aggregate-only; reset on restart or scale-to-zero",
+      "modelCalls": {
+        "attemptedSinceStart": 0,
+        "succeededSinceStart": 0,
+        "failedSinceStart": 0,
+        "usageReportedCallsSinceStart": 0,
+        "reportedInputTokensSinceStart": 0,
+        "reportedOutputTokensSinceStart": 0
+      },
+      "proposalOutcomesSinceStart": {},
+      "proposalLatencyBucketsMs": {},
+      "modelLatencyBucketsMs": {},
+      "lifecycleLogSampleRate": 0.1
+    }
+  },
+  "interpretation": "This single post-deployment observation confirms the telemetry contract and the existing configured limits, but contains no proposal traffic. It does not establish a production cost or performance claim and does not support changing the five-per-minute or 100-per-process limits.",
+  "limitations": [
+    "All counters are process-local and reset after restart or scale-to-zero.",
+    "No raw questions, SQL, result rows, client identifiers, token values, trace IDs, or environment values were retained.",
+    "The observation is not a production benchmark, availability claim, or Azure OpenAI cost claim."
+  ]
+}

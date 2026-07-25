@@ -4,8 +4,8 @@
 
 - Lifecycle: `maintained` portfolio project.
 - Deployment: anonymous, indefinite, non-production `live` demo on the existing Azure Container App.
-- Source: `c6e8441e401efe6c9214b8231e932c7dc6c1467e` on `main`.
-- Deployment verification: GitHub Actions workflow `30141993709` deployed and verified that exact source SHA.
+- Source: `397b42666f3d999e33e66b0e7eae413b2f9569fa` on `main`.
+- Deployment verification: GitHub Actions workflow `30145269339` deployed and verified that exact source SHA.
 - Portfolio publication: the public site verified and synchronized the project; its tracked catalog now records the same source SHA.
 - Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`.
 
@@ -37,30 +37,28 @@ The demo has no end-user login. Azure managed identity is used only for the serv
   `docs/ibm-aml-acquisition.md`; it does not authorize a dataset download.
 - Aggregate-only baseline evidence is recorded in `evidence/m0/baseline.json`.
 
-## M1 release candidate
+## M1 deployment observation
 
-- Candidate commit: `369fd727c5ce42572c85654a94e00a1a6afbe09b` on the pushed
-  `scale-ready-m1-telemetry` branch. It is not merged or deployed.
+- The M1 telemetry release merged as `397b42666f3d999e33e66b0e7eae413b2f9569fa`
+  and GitHub Actions workflow `30145269339` deployed and live-verified that
+  exact SHA on the existing Azure target.
 - It adds process-local aggregate proposal telemetry at `/v1/status`: proposal
   outcomes, provider-call counts, provider-reported token totals, and fixed
   latency buckets. Lifecycle logs are sampled status-only metadata with no
   identifiers or configured exporter.
+- The one bounded status observation is recorded in
+  `evidence/m1/deployment-observation.json`. It captured zero aggregate proposal
+  traffic after deployment, so the existing five-per-minute and 100-per-process
+  limits remain unchanged. It is not a production cost or performance claim.
 - Verification passed: formatting, lint, 31 tests, deterministic evaluation
-  generation, manifest validation, Docker Compose validation, `git diff --check`,
-  and the built-container data-boundary verification.
+  generation, manifest validation, presentation validation, Docker Compose,
+  `git diff --check`, and the built-container data-boundary verification.
 
-## Next milestone: M1 deployment observation
+## Next safe action
 
-Merge the candidate to `main` through its review workflow. Per the project
-contract, that authorizes redeployment to the existing Azure target and
-exact-SHA verification. Then record one bounded, aggregate-only status
-observation before deciding whether the five-per-minute and 100-per-process
-limits should change. Do not present the observation as a production cost or
-performance claim.
-
-M2 is skipped under M0-A. M3 remains blocked until the owner separately
-authorizes the pinned IBM artifact download; the M0 acquisition-procedure
-approval alone does not permit it.
+Retain the existing limits unless the owner separately authorizes a new bounded
+observation or a policy change. M2 is skipped under M0-A; M3 remains blocked
+until the owner separately authorizes the pinned IBM artifact download.
 
 No new Azure resource, paid capacity, raw IBM data download, capacity change,
 user login, or Resume Creator change is authorized. The default remains one
