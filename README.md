@@ -130,7 +130,7 @@ License / provenance: MoMTSim V2 is CC BY 4.0; the deployed rows are repository-
 | --- | --- | --- |
 | Azure Container Apps | Consumption profile with zero-to-one replicas and no automatic expiry. | The demo can cold start; no availability SLO is claimed. |
 | Azure OpenAI | Proposal-only model call with a per-process budget and a classified semantic catalog. | Local latency and cost observations are not production cost or performance claims. |
-| Proposal and analytics storage | Ephemeral SQLite plus a read-only synthetic fixture in the public demo. | Durable multi-replica operation requires an owner-approved shared store; Azure Table Storage is the first cost-first candidate for short-lived approvals and counters. |
+| Proposal and analytics storage | Ephemeral SQLite plus a read-only synthetic fixture in the public demo. | Durable multi-replica operation requires an owner-approved transactional store. |
 
 ## Known limitations
 
@@ -142,12 +142,11 @@ License / provenance: MoMTSim V2 is CC BY 4.0; the deployed rows are repository-
 
 ## Scalability roadmap
 
-The detailed, approval-gated plan is in [`docs/scale-ready-milestones.md`](docs/scale-ready-milestones.md). Its cost-first default preserves the current single-replica anonymous demo.
-
-- Measure model and telemetry cost with aggregate-only evidence, then tune the bounded proposal path
-- Use an owner-approved Table Storage implementation only if cross-replica/restart-persistence evidence is required
-- Keep PostgreSQL, Redis, edge services, and login out of scope unless measured needs and explicit owner approval justify them
-- Add private benchmark, bounded load, recovery, and consumer-convergence evidence without widening the public data boundary
+- Replace ephemeral SQLite with an owner-approved transactional store and prove cross-replica single-use consumption
+- Enable single-tenant Microsoft Entra authentication and verify unauthenticated denial
+- Replace process-local rate and proposal budgets with durable distributed controls before multi-replica hosting
+- Add alerting, budget ownership, availability/error monitoring, and an owner-approved load envelope
+- Expand semantic evaluation with reviewer-approved equivalent SQL rather than literal query matching
 
 ## Repository structure
 
