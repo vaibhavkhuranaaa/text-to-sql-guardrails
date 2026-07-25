@@ -28,10 +28,42 @@ The demo has no end-user login. Azure managed identity is used only for the serv
 - There is no availability SLO, on-call rota, production authorization boundary, or real-customer data claim.
 - Resume Creator still has the previous approved project SHA. Portfolio Site and Portfolio OS are current; that consumer synchronization is not yet complete.
 
-## Agreed next milestone: scale-ready evidence, not a production launch
+## M0 outcome
 
-The owner chose a PostgreSQL-first path. It preserves anonymous public review while making approval consumption and baseline abuse controls durable. It also adds an IBM synthetic AML benchmark for private data/evaluation work, a larger evaluation suite, and published aggregate scale evidence.
+- The owner selected M0-A: retain the zero-to-one-replica public demo and its
+  ephemeral SQLite state; no new Azure resource or incremental monthly-cost
+  envelope is authorized.
+- The owner approved the IBM artifact-pinning procedure in
+  `docs/ibm-aml-acquisition.md`; it does not authorize a dataset download.
+- Aggregate-only baseline evidence is recorded in `evidence/m0/baseline.json`.
 
-No new Azure resource, paid capacity, raw IBM data download, deployment change, or Resume Creator change has been authorized by this planning checkpoint. Each requires explicit confirmation at the corresponding milestone.
+## M1 release candidate
 
-See `docs/HANDOFF.md` for the ordered implementation plan, acceptance criteria, cost gates, and exact resume prompt.
+- Candidate commit: `369fd727c5ce42572c85654a94e00a1a6afbe09b` on the pushed
+  `scale-ready-m1-telemetry` branch. It is not merged or deployed.
+- It adds process-local aggregate proposal telemetry at `/v1/status`: proposal
+  outcomes, provider-call counts, provider-reported token totals, and fixed
+  latency buckets. Lifecycle logs are sampled status-only metadata with no
+  identifiers or configured exporter.
+- Verification passed: formatting, lint, 31 tests, deterministic evaluation
+  generation, manifest validation, Docker Compose validation, `git diff --check`,
+  and the built-container data-boundary verification.
+
+## Next milestone: M1 deployment observation
+
+Merge the candidate to `main` through its review workflow. Per the project
+contract, that authorizes redeployment to the existing Azure target and
+exact-SHA verification. Then record one bounded, aggregate-only status
+observation before deciding whether the five-per-minute and 100-per-process
+limits should change. Do not present the observation as a production cost or
+performance claim.
+
+M2 is skipped under M0-A. M3 remains blocked until the owner separately
+authorizes the pinned IBM artifact download; the M0 acquisition-procedure
+approval alone does not permit it.
+
+No new Azure resource, paid capacity, raw IBM data download, capacity change,
+user login, or Resume Creator change is authorized. The default remains one
+replica with ephemeral SQLite state.
+
+See `docs/scale-ready-milestones.md` for the authoritative scope, decisions, milestones, exits, and owner approvals. See `docs/HANDOFF.md` for the concise continuation instructions.

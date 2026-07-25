@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "kind": "m0-cost-first-baseline",
+  "observedAt": "2026-07-25T04:10:13Z",
+  "scope": {
+    "deployment": "anonymous, non-production Azure Container App demo",
+    "topology": "scale-to-zero; one replica maximum; ephemeral SQLite approval state",
+    "dataset": "committed hand-authored synthetic demo fixture only"
+  },
+  "liveStatus": {
+    "sourceSha": "6c6cd48bd9e6faf802369338a6e2fe47c9333e79",
+    "snapshotState": "demo_fixture",
+    "fixtureSha256": "089709b3a93363aa04e7398404336eddde104bf6d5bc06e9d3b4c801fe1a34d3",
+    "proposalGate": {
+      "scope": "single process; anonymous demo",
+      "proposalsPerMinute": 5,
+      "maxProposalsPerProcess": 100,
+      "acceptedSinceStart": 0,
+      "rateLimitedSinceStart": 0,
+      "budgetRefusedSinceStart": 0
+    }
+  },
+  "localDeterministicEvaluation": {
+    "method": "uv run python scripts/run_evaluation.py at the baseline observation time",
+    "scope": "Timestamped local developer-machine observation; later report regenerations may differ.",
+    "caseCount": 18,
+    "expectedOutcomesMatched": 18,
+    "latencyMs": {
+      "p50": 10.498,
+      "p95": 17.262
+    },
+    "localCostUsd": 0.0
+  },
+  "notObserved": [
+    "Azure OpenAI provider-call count",
+    "aggregate policy, provider, and proposal-store refusal counts",
+    "live request latency buckets",
+    "Azure OpenAI token usage or cost"
+  ],
+  "limitations": [
+    "Live proposal-gate counters are process-local and reset after restart or scale-to-zero.",
+    "The local deterministic evaluation does not measure Azure Foundry behavior or live-service latency.",
+    "This is a baseline record, not a production performance, availability, or cost claim."
+  ]
+}

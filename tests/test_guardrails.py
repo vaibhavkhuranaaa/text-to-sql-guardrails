@@ -11,6 +11,7 @@ from guardrails.api import app
 from guardrails.catalog import SUPPORTED_QUESTIONS
 from guardrails.db import connect, load_fixture, prepared_read_only_connection, semantic_catalog
 from guardrails.limits import ProposalGate
+from guardrails.observability import ProposalTelemetry
 from guardrails.pipeline import (
     DataQualityError,
     build_snapshot,
@@ -54,7 +55,52 @@ def test_console_and_snapshot_status_are_visible_without_source_rows():
     assert client.get("/").status_code == 200
     status = client.get("/v1/status").json()
     assert status["snapshot"]["state"] in {"demo_fixture", "approved"}
+    telemetry = status["proposal_telemetry"]
+    assert telemetry["scope"].startswith("single process; aggregate-only")
+    assert set(telemetry) == {
+        "scope",
+        "model_calls",
+        "proposal_outcomes_since_start",
+        "proposal_latency_buckets_ms",
+        "lifecycle_log_sample_rate",
+        "retention",
+    }
     assert client.get("/v1/evaluation").json()["case_count"] >= 1
+
+
+def test_proposal_telemetry_retains_only_aggregate_usage_and_latency():
+    telemetry = ProposalTelemetry()
+    model_started = telemetry.model_call_started()
+    telemetry.model_call_finished(model_started, succeeded=True, input_tokens=17, output_tokens=9)
+    telemetry.proposal_finished("policy_refused", model_started)
+
+    status = telemetry.status()
+    model_calls = status["model_calls"]
+    assert model_calls["attempted_since_start"] == 1
+    assert model_calls["succeeded_since_start"] == 1
+    assert model_calls["reported_input_tokens_since_start"] == 17
+    assert model_calls["reported_output_tokens_since_start"] == 9
+    assert status["proposal_outcomes_since_start"] == {"policy_refused": 1}
+    assert "prompt" not in str(status).lower()
+    assert "trace_id" not in str(status).lower()
+
+
+def test_lifecycle_events_are_sampled_and_strip_identifiers(monkeypatch, caplog):
+    from guardrails.observability import event
+
+    monkeypatch.setenv("GUARDRAILS_TELEMETRY_SAMPLE_RATE", "1")
+    with caplog.at_level("INFO", logger="guardrails"):
+        event(
+            "proposal_created",
+            trace_id="private-trace",
+            proposal_id="private-proposal",
+            client_key="private-client",
+            reason="policy",
+        )
+    assert "private-trace" not in caplog.text
+    assert "private-proposal" not in caplog.text
+    assert "private-client" not in caplog.text
+    assert '"reason": "policy"' in caplog.text
 
 
 def test_deployment_bootstrap_contract_and_runtime_assets_are_packaged():
@@ -340,7 +386,8 @@ def test_foundry_uses_entra_bearer_token_not_api_key(monkeypatch):
                                     "content": '{"sql":"SELECT channel FROM fact_payments","assumptions":[]}'
                                 }
                             }
-                        ]
+                        ],
+                        "usage": {"prompt_tokens": 17, "completion_tokens": 9},
                     }
                 ).encode()
             )
@@ -359,6 +406,8 @@ def test_foundry_uses_entra_bearer_token_not_api_key(monkeypatch):
     )
     proposal = foundry.generate("Show channels.")
     assert proposal.model == "guarded-model"
+    assert proposal.input_tokens == 17
+    assert proposal.output_tokens == 9
     assert captured["request"].full_url.endswith("/openai/v1/chat/completions")
     assert json.loads(captured["request"].data)["model"] == "guarded-model"
     assert captured["request"].get_header("Authorization") == "Bearer test-entraid-token"

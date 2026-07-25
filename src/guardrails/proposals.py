@@ -11,10 +11,11 @@ import time
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
+from time import perf_counter
 
 from .db import snapshot_status
 from .foundry import FoundryUnavailable, generate
-from .observability import event
+from .observability import event, proposal_telemetry
 from .service import execute_validated
 from .validation import validate_sql
 
@@ -121,14 +122,17 @@ def _store_refusal(trace_id: str) -> dict:
 
 
 def create(question: str) -> dict:
+    started = perf_counter()
     trace_id = uuid.uuid4().hex
     try:
         generated = generate(question)
     except FoundryUnavailable as exc:
+        proposal_telemetry.proposal_finished("provider_refused", started)
         event("proposal_refused", trace_id=trace_id, reason="provider_unavailable")
         return {"status": "refused", "trace_id": trace_id, "reason": str(exc)}
     result = validate_sql(generated.sql)
     if not result.valid:
+        proposal_telemetry.proposal_finished("policy_refused", started)
         event("proposal_refused", trace_id=trace_id, reason="policy")
         return {
             "status": "refused",
@@ -159,7 +163,9 @@ def create(question: str) -> dict:
     try:
         _save(proposal)
     except sqlite3.Error:
+        proposal_telemetry.proposal_finished("store_refused", started)
         return _store_refusal(trace_id)
+    proposal_telemetry.proposal_finished("proposed", started)
     event("proposal_created", trace_id=trace_id, proposal_id=proposal_id, model=generated.model)
     return {
         "status": "proposed",
