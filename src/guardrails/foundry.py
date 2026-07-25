@@ -15,6 +15,7 @@ from dataclasses import dataclass
 from azure.identity import DefaultAzureCredential
 
 from .db import semantic_catalog
+from .observability import proposal_telemetry
 
 
 class FoundryUnavailable(RuntimeError):
@@ -27,6 +28,8 @@ class GeneratedProposal:
     assumptions: list[str]
     model: str
     token_cost_usd: float | None = None
+    input_tokens: int | None = None
+    output_tokens: int | None = None
 
 
 def _instructions() -> str:
@@ -67,6 +70,7 @@ def generate(question: str) -> GeneratedProposal:
             "response_format": {"type": "json_object"},
         }
     ).encode()
+    started = proposal_telemetry.model_call_started()
     try:
         request = urllib.request.Request(
             url,
@@ -79,10 +83,12 @@ def generate(question: str) -> GeneratedProposal:
         with urllib.request.urlopen(request, timeout=30) as response:
             payload = json.load(response)
     except urllib.error.HTTPError as exc:
+        proposal_telemetry.model_call_finished(started, succeeded=False)
         raise FoundryUnavailable(
             f"Azure Foundry generation was unavailable (HTTP {exc.code}); no SQL was executed."
         ) from exc
-    except OSError as exc:
+    except (OSError, json.JSONDecodeError) as exc:
+        proposal_telemetry.model_call_finished(started, succeeded=False)
         raise FoundryUnavailable(
             "Azure Foundry generation was unavailable; no SQL was executed."
         ) from exc
@@ -90,8 +96,28 @@ def generate(question: str) -> GeneratedProposal:
         content = json.loads(payload["choices"][0]["message"]["content"])
         sql = str(content["sql"])
     except (KeyError, TypeError, json.JSONDecodeError) as exc:
+        proposal_telemetry.model_call_finished(started, succeeded=False)
         raise FoundryUnavailable("Azure Foundry returned an invalid proposal contract.") from exc
     assumptions = content.get("assumptions", [])
     if not isinstance(assumptions, list) or not all(isinstance(item, str) for item in assumptions):
         assumptions = []
-    return GeneratedProposal(sql=sql, assumptions=assumptions, model=deployment)
+    usage = payload.get("usage", {})
+    input_tokens = usage.get("prompt_tokens") if isinstance(usage, dict) else None
+    output_tokens = usage.get("completion_tokens") if isinstance(usage, dict) else None
+    if not isinstance(input_tokens, int) or input_tokens < 0:
+        input_tokens = None
+    if not isinstance(output_tokens, int) or output_tokens < 0:
+        output_tokens = None
+    proposal_telemetry.model_call_finished(
+        started,
+        succeeded=True,
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
+    )
+    return GeneratedProposal(
+        sql=sql,
+        assumptions=assumptions,
+        model=deployment,
+        input_tokens=input_tokens,
+        output_tokens=output_tokens,
+    )

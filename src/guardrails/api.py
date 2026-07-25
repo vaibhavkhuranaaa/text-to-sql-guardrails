@@ -1,5 +1,6 @@
 import json
 import os
+import time
 from pathlib import Path
 from typing import Literal
 
@@ -10,6 +11,7 @@ from pydantic import BaseModel, Field
 from .db import policy_schema, prepared_read_only_connection, semantic_catalog, snapshot_status
 from .examples import examples_for_schema
 from .limits import ProposalGate
+from .observability import proposal_telemetry
 from .proposals import create, execute
 from .service import query
 from .ui import CONSOLE_HTML
@@ -53,8 +55,13 @@ def post_query(request: QueryRequest) -> dict:
 @app.post("/v2/query-proposals")
 def post_query_proposal(payload: ProposalRequest, request: Request) -> dict:
     """Generate and validate a proposal. This endpoint never executes SQL."""
+    started = time.perf_counter()
     decision = PROPOSAL_GATE.check(request.client.host if request.client else None)
     if not decision.allowed:
+        proposal_telemetry.proposal_finished(
+            "rate_limited" if "Too many" in (decision.reason or "") else "budget_refused",
+            started,
+        )
         raise HTTPException(status_code=decision.status_code, detail=decision.reason)
     return create(payload.question)
 
@@ -126,6 +133,7 @@ def get_status() -> dict:
         "snapshot": snapshot_status(),
         "policy": "v1 deterministic catalog; v2 Foundry proposals require explicit human approval before read-only execution.",
         "anonymous_demo_controls": PROPOSAL_GATE.status(),
+        "proposal_telemetry": proposal_telemetry.status(),
         "source_sha": os.getenv("PORTFOLIO_SOURCE_SHA"),
     }
 

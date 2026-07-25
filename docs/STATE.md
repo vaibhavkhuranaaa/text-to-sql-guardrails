@@ -28,10 +28,21 @@ The demo has no end-user login. Azure managed identity is used only for the serv
 - There is no availability SLO, on-call rota, production authorization boundary, or real-customer data claim.
 - Resume Creator still has the previous approved project SHA. Portfolio Site and Portfolio OS are current; that consumer synchronization is not yet complete.
 
-## Agreed next milestone: scale-ready evidence, not a production launch
+## M0 outcome
 
-The owner chose a PostgreSQL-first path. It preserves anonymous public review while making approval consumption and baseline abuse controls durable. It also adds an IBM synthetic AML benchmark for private data/evaluation work, a larger evaluation suite, and published aggregate scale evidence.
+- The owner selected M0-A: retain the zero-to-one-replica public demo and its
+  ephemeral SQLite state; no new Azure resource or incremental monthly-cost
+  envelope is authorized.
+- The owner approved the IBM artifact-pinning procedure in
+  `docs/ibm-aml-acquisition.md`; it does not authorize a dataset download.
+- Aggregate-only baseline evidence is recorded in `evidence/m0/baseline.json`.
 
-No new Azure resource, paid capacity, raw IBM data download, deployment change, or Resume Creator change has been authorized by this planning checkpoint. Each requires explicit confirmation at the corresponding milestone.
+## Next milestone: M1 low-cost proposal-path controls
 
-See `docs/HANDOFF.md` for the ordered implementation plan, acceptance criteria, cost gates, and exact resume prompt.
+The planned work preserves anonymous public review while making only evidence-backed changes. The cost-first default keeps the existing Container App at one replica with its ephemeral SQLite approval state. A durable shared store is needed only when the owner explicitly requests a multi-replica/restart-persistence proof; the proposed low-cost option is Azure Table Storage, with PostgreSQL reserved for relational or higher-contention needs.
+
+The milestone plan also covers a private IBM synthetic AML benchmark, a larger evaluation suite, aggregate-only scale evidence, and lean recovery evidence. It does not turn the project into a production banking or AML decision system.
+
+No new Azure resource, paid capacity, raw IBM data download, deployment change, user login, or Resume Creator change has been authorized. The provisional $30/month incremental ceiling and every resource choice remain approval gates.
+
+See `docs/scale-ready-milestones.md` for the authoritative scope, decisions, milestones, exits, and owner approvals. See `docs/HANDOFF.md` for the concise continuation instructions.
