@@ -4,8 +4,8 @@
 
 - Lifecycle: `maintained` portfolio project.
 - Deployment: anonymous, indefinite, non-production `live` demo on the existing Azure Container App.
-- Last verified application release: `05cfcdf79c1cebfdd000a5c1955ed698157eba81` on `main`.
-- Deployment verification: GitHub Actions workflow `30146749371` deployed and verified that exact release SHA.
+- Last independently live-verified application release: `36156cc825c0245e0bf803c2aeb75718998d7126` on `main`.
+- Deployment verification: GitHub Actions workflow `30177660324` deployed and verified that exact release SHA.
 - Portfolio publication: the public site verified and synchronized the project; its tracked catalog now records the same source SHA.
 - Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`.
 

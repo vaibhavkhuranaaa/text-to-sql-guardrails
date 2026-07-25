@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. The last verified application release is `05cfcdf79c1cebfdd000a5c1955ed698157eba81`.
+Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. The last independently live-verified application release is `36156cc825c0245e0bf803c2aeb75718998d7126` (workflow `30177660324`).
 
 The demo is live, anonymous, indefinite, non-production, scale-to-zero, and backed only by the committed hand-authored synthetic fixture. Do not add login, caller authorization, real customer data, raw data to the image, a public database endpoint, or a production/SLA claim.
 
