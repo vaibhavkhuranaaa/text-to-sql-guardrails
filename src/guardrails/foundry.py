@@ -68,6 +68,7 @@ def generate(question: str) -> GeneratedProposal:
                 {"role": "user", "content": question},
             ],
             "response_format": {"type": "json_object"},
+            "max_completion_tokens": 2048,
         }
     ).encode()
     started = proposal_telemetry.model_call_started()
