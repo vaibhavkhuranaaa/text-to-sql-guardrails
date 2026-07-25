@@ -1,4 +1,4 @@
-"""Write status-only verification evidence for the temporary anonymous demo."""
+"""Write status-only verification evidence for the anonymous live demo."""
 
 from __future__ import annotations
 
@@ -27,8 +27,6 @@ parser.add_argument("--base-url", required=True)
 parser.add_argument("--revision", required=True)
 parser.add_argument("--image", required=True)
 parser.add_argument("--digest", required=True)
-parser.add_argument("--expires-at", required=True)
-parser.add_argument("--owner", required=True)
 parser.add_argument("--source-sha", required=True)
 parser.add_argument("--out", type=Path, required=True)
 args = parser.parse_args()
@@ -64,11 +62,14 @@ checks.append(
 )
 
 controls = status_payload.get("anonymous_demo_controls", {})
+for retired_field in ("expires_at", "expired"):
+    if retired_field in controls:
+        raise SystemExit(
+            f"public deployment must not expose retired expiry control {retired_field}"
+        )
 expected_controls = {
     "proposals_per_minute": 5,
     "max_proposals_per_process": 100,
-    "expires_at": args.expires_at,
-    "expired": False,
 }
 for key, expected in expected_controls.items():
     if controls.get(key) != expected:
@@ -87,7 +88,7 @@ checks.append(
 
 record = {
     "schemaVersion": 1,
-    "kind": "temporary-anonymous-demo",
+    "kind": "anonymous-live-demo",
     "productionClaim": False,
     "exposure": "anonymous",
     "baseUrl": base_url,
@@ -96,8 +97,6 @@ record = {
     "imageDigest": args.digest,
     "sourceSha": args.source_sha,
     "verifiedAt": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
-    "expiresAt": args.expires_at,
-    "expiryOwner": args.owner,
     "checks": checks,
     "limitations": [
         "No caller identity or authorization boundary.",

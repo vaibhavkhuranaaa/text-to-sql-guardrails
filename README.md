@@ -13,7 +13,7 @@
 | Decision supported | Whether a proposed analytical query is within the classified schema and safe enough for one reviewed execution. |
 | Outcome | Reviewers can inspect SQL, assumptions, schema lineage, policy checks, and a bounded result preview before one single-use execution; unsafe, malformed, identifier-exposing, and hallucinated-schema queries fail closed. |
 | Try it | [Open the reviewed demo](https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io) |
-| Important boundary | Temporary anonymous, non-production demonstration using synthetic data only. It is not a bank system, fraud decision service, security posture, availability claim, or production-readiness claim. |
+| Important boundary | Anonymous, non-production demonstration using synthetic data only. It is not a bank system, fraud decision service, security posture, availability claim, or production-readiness claim. |
 
 ## What the system does
 
@@ -89,9 +89,9 @@ uv run uvicorn guardrails.api:app --reload
 | Measure | Dataset / scope | Method | Evidence | Limitation |
 | --- | --- | --- | --- | --- |
 | deterministic policy outcomes: 18/18 | 18 trusted and refused cases over the committed synthetic fixture | uv run python scripts/run_evaluation.py against the committed synthetic fixture | [evaluation.local-policy](evaluation/report.json) | The fixture and case set are intentionally bounded and do not establish open-ended semantic correctness. |
-| public status-only checks: 6/6 | Root, evaluation, examples, safe preview, active fixture boundary, and deployed control configuration | HTTP checks with response bodies limited to status and disclosed fixture metadata | [deployment.temporary-demo](evidence/deployment/temporary-demo.json), [security.demo-fixture-boundary](evidence/deployment/temporary-demo.json) | Status-only checks do not establish availability, caller authorization, durable limits, or production readiness. |
+| public status-only checks: 6/6 | Root, evaluation, examples, safe preview, active fixture boundary, and deployed control configuration | HTTP checks with response bodies limited to status and disclosed fixture metadata | [deployment.anonymous-live-demo](evidence/deployment/anonymous-live-demo.json), [security.demo-fixture-boundary](evidence/deployment/anonymous-live-demo.json) | Status-only checks do not establish availability, caller authorization, durable limits, or production readiness. |
 
-Evaluation mode: **deterministic local policy evaluation plus live status-only integration checks on a temporary demo**. These results are project evidence, not a production SLO.
+Evaluation mode: **deterministic local policy evaluation plus live status-only integration checks on an anonymous demo**. These results are project evidence, not a production SLO.
 
 ## Data disclosure
 
@@ -108,13 +108,13 @@ License / provenance: MoMTSim V2 is CC BY 4.0; the deployed rows are repository-
 | Parser-backed read-only SQL policy | SQLGlot validates statement shape, functions, tables, columns, identifier projection, and resource boundaries before DuckDB EXPLAIN or execution. | [evaluation.local-policy](evaluation/report.json) | A syntactically safe query can still be semantically wrong, so human review remains mandatory. |
 | Data and container boundary | Raw source data and approved snapshots are excluded from the image; model context and previews omit identifier-like fields. | [security.container-data-boundary](.dockerignore and scripts/verify_container_boundary.py), [disclosure.synthetic-data](data/PROVENANCE.md and data/source_manifest.json) | The public fixture remains a small hand-authored synthetic demonstration. |
 | Short-lived single-use approval | Execution requires a five-minute token-bound approval and revalidates SQL policy plus the active snapshot checksum. | [integration.entra-proposal-lifecycle](docs/HANDOFF.md) | Approval state is ephemeral SQLite and is not durable across restarts or replicas. |
-| Temporary-demo controls | The public revision exposes rate, proposal-budget, expiry, and aggregate status controls. | [deployment.temporary-demo](evidence/deployment/temporary-demo.json), [security.demo-fixture-boundary](evidence/deployment/temporary-demo.json) | Controls are process-local and reset after scale-to-zero or restart; there is no caller authorization. |
+| Anonymous-demo controls | The public revision exposes rate, proposal-budget, and aggregate status controls. | [deployment.anonymous-live-demo](evidence/deployment/anonymous-live-demo.json), [security.demo-fixture-boundary](evidence/deployment/anonymous-live-demo.json) | Controls are process-local and reset after scale-to-zero or restart; there is no caller authorization. |
 
 ## Deployment state
 
 | Provider | Runtime | State | Exposure | Verified | Production claim |
 | --- | --- | --- | --- | --- | --- |
-| Azure Container Apps | Scale-to-zero FastAPI container using the committed demo fixture and ephemeral SQLite proposal state | temporary-demo | anonymous | 2026-07-24T04:25:22.107862Z | No |
+| Azure Container Apps | Scale-to-zero FastAPI container using the committed demo fixture and ephemeral SQLite proposal state | live | anonymous | 2026-07-24T04:25:22.107862Z | No |
 
 ## Technology decisions and trade-offs
 
@@ -122,13 +122,13 @@ License / provenance: MoMTSim V2 is CC BY 4.0; the deployed rows are repository-
 | --- | --- | --- | --- |
 | Azure OpenAI with Microsoft Entra ID | Keeps provider credentials out of the repository and supports managed identity in Azure. | Static API keys | Identity and role configuration add operational setup but remove long-lived application secrets. |
 | SQLGlot plus DuckDB EXPLAIN | Provides parser-backed structural policy and database-level validation before execution. | Regex filtering or direct model execution | The policy intentionally rejects ambiguous or unsupported SQL and still requires semantic human review. |
-| Ephemeral SQLite approval store | Provides five-minute single-use approval persistence for a one-replica temporary demo. | Managed transactional database | Simple and low-cost, but restart-sensitive and unsuitable for protected multi-replica hosting. |
+| Ephemeral SQLite approval store | Provides five-minute single-use approval persistence for a one-replica anonymous demo. | Managed transactional database | Simple and low-cost, but restart-sensitive and unsuitable for protected multi-replica hosting. |
 
 ## Cost boundaries
 
 | Component | Boundary | Implication |
 | --- | --- | --- |
-| Azure Container Apps | Consumption profile with zero-to-one replicas and an owner-controlled expiry. | The demo can cold start and must be reviewed or torn down by the recorded expiry; no availability SLO is claimed. |
+| Azure Container Apps | Consumption profile with zero-to-one replicas and no automatic expiry. | The demo can cold start; no availability SLO is claimed. |
 | Azure OpenAI | Proposal-only model call with a per-process budget and a classified semantic catalog. | Local latency and cost observations are not production cost or performance claims. |
 | Proposal and analytics storage | Ephemeral SQLite plus a read-only synthetic fixture in the public demo. | Durable multi-replica operation requires an owner-approved transactional store. |
 
@@ -138,7 +138,7 @@ License / provenance: MoMTSim V2 is CC BY 4.0; the deployed rows are repository-
 - The deployed rate and proposal-budget controls are process-local and reset after scale-to-zero or restart.
 - Approval state is ephemeral and single-replica.
 - The model can still propose semantically wrong SQL, so human review remains mandatory.
-- The demo expiry requires owner teardown; the application cannot delete its own Azure resources.
+- The anonymous demo has no automatic expiry; the owner remains responsible for ongoing cost and operational review.
 
 ## Scalability roadmap
 
@@ -173,8 +173,8 @@ License / provenance: MoMTSim V2 is CC BY 4.0; the deployed rows are repository-
 | ID | Kind | Claim | Method | Result |
 | --- | --- | --- | --- | --- |
 | [`evaluation.local-policy`](evaluation/report.json) | evaluation | All 18 deterministic policy cases matched their expected trusted or refused outcomes. | uv run python scripts/run_evaluation.py against the committed synthetic fixture | 18/18 expected outcomes |
-| [`deployment.temporary-demo`](evidence/deployment/temporary-demo.json) | deployment | Six status-only public route, fixture-boundary, and deployed-control checks passed for the anonymous temporary demo. | HTTP checks with response bodies limited to status and disclosed fixture metadata | revision 0000007 / 6 checks passed |
-| [`security.demo-fixture-boundary`](evidence/deployment/temporary-demo.json) | security | The active public revision reports the committed demo fixture, not the local approved snapshot. | Verified /v1/status snapshot state and fixture SHA-256 | demo_fixture |
+| [`deployment.anonymous-live-demo`](evidence/deployment/anonymous-live-demo.json) | deployment | Six status-only public route, fixture-boundary, and deployed-control checks passed for the anonymous live demo. | HTTP checks with response bodies limited to status and disclosed fixture metadata | revision 0000007 / 6 checks passed |
+| [`security.demo-fixture-boundary`](evidence/deployment/anonymous-live-demo.json) | security | The active public revision reports the committed demo fixture, not the local approved snapshot. | Verified /v1/status snapshot state and fixture SHA-256 | demo_fixture |
 | [`security.container-data-boundary`](.dockerignore and scripts/verify_container_boundary.py) | security | The container build context excludes raw source files and data/approved artifacts while retaining only the disclosed fixture and aggregate evidence. | Build the image and run the boundary verifier inside that image | verified in Azure-built image sha256:fb11bdf14321e18fb835670154b737a3d4ff6d81c5c29ebba4f79c9c47bc7e53 |
 | [`disclosure.synthetic-data`](data/PROVENANCE.md and data/source_manifest.json) | disclosure | The deployed dataset is hand-authored synthetic data and source account identifiers are excluded from the approved snapshot contract. | Versioned provenance, license, source checksums, and curated-field classification | synthetic / CC BY 4.0 source attribution |
 | [`integration.entra-proposal-lifecycle`](docs/HANDOFF.md) | review | An owner-authenticated local lifecycle generated, approved once, revalidated, and executed a bounded aggregate proposal. | Status-level local integration verification using Microsoft Entra ID; no token, question, SQL, or rows retained | verified locally; not a public SLO |

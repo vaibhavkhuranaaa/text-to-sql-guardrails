@@ -2,13 +2,13 @@
 
 ## Minimal resume
 
-Read `AGENTS.md`, `docs/STATE.md`, this file, and only the paths named by the task. Public release uses `portfolio/release.json` and `.github/workflows/deploy.yml`; it requires an approved exact SHA, the documented temporary-demo expiry, and explicit approval for the existing paid Azure target.
+Read `AGENTS.md`, `docs/STATE.md`, this file, and only the paths named by the task. Public release uses `portfolio/release.json` and `.github/workflows/deploy.yml`; it requires an approved exact SHA and explicit approval for the existing paid Azure target.
 
 ## Resume point
 
 Read `AGENTS.md`, `docs/STATE.md`, `portfolio/project.json`, and the structured deployment evidence. Query the fresh Graphify graph first for covered code paths and fall back to direct inspection where needed.
 
-The project is a verified anonymous temporary demo, not an undeployed local prototype and not a production service. Replacement revision `0000007` deploys the source-level rate, process-budget, expiry, and status controls and scales from zero to one replica.
+The project is an anonymous live demo, not an undeployed local prototype and not a production service. It deploys source-level rate, process-budget, and status controls and scales from zero to one replica.
 
 Portfolio publication is approved at exact evidence commit `9b05287ce2598ad82920fc1c1dd19c1b62aec3f9`. The portfolio site, Resume Creator, and public GitHub index were regenerated from the same three-project approved catalog.
 
@@ -19,16 +19,16 @@ The authorized local cleanup is recorded at `3b49ce43642afd09a72f8ab779fba71d8eb
 - Reconciled README, state, handoff, architecture, product, deployment, and manifest facts.
 - Added a v2 first-demo evidence contract with exact deployment revision/digest, synthetic-data disclosure, limitations, roadmap, and evidence-linked résumé bullets.
 - Verified five status-only public checks without retaining tokens, questions, SQL, or result rows.
-- Added rate, process-budget, expiry, and aggregate status controls in source.
+- Added rate, process-budget, and aggregate status controls in source.
 - Excluded `data/Raw`, `data/raw`, and `data/approved` from the container context and added an in-image boundary verifier.
-- Replaced placeholder portfolio dispatch/release workflows with exact-SHA preview and owner-gated verification workflows.
+- Uses exact-SHA deployment and release-verification workflows; external portfolio consumers synchronize independently.
 
 ## Preserve
 
 - `data/.DS_Store` was moved to macOS Trash as `text-to-sql-guardrails-data.DS_Store` under explicit owner authority; restore it from Trash only if needed.
 - Raw CSVs, approved snapshots, profiles, metadata, benchmarks, and proposal stores are local/ignored artifacts.
 - Do not expose the owner-controlled Azure endpoint/deployment environment configuration as committed runtime values.
-- Do not describe the temporary URL as authenticated, durably rate-limited, monitored, or production-ready. The deployed limits are process-local and reset after scale-to-zero or restart.
+- Do not describe the anonymous URL as authenticated, durably rate-limited, monitored, or production-ready. The deployed limits are process-local and reset after scale-to-zero or restart.
 
 ## Verification result
 
@@ -39,11 +39,19 @@ The authorized local cleanup is recorded at `3b49ce43642afd09a72f8ab779fba71d8eb
 - Graphify was regenerated and source-fingerprint stamped.
 - The authorized `.DS_Store` cleanup is recoverable from macOS Trash.
 - The in-image boundary proof could not run locally because no Docker application/daemon exists; CI now performs it after image construction.
-- The public remote is `vaibhavkhuranaaa/text-to-sql-guardrails`; the exact source commit and replacement deployment are anonymously verifiable. Draft PR 1 remains an unmerged review record.
+- The public remote is `vaibhavkhuranaaa/text-to-sql-guardrails`; the exact source commit and replacement deployment are anonymously verifiable. The current branch is `main`.
+
+## No-expiry transition
+
+- Expiry configuration, runtime refusal/status fields, workflow inputs, and deployment-evidence fields were removed. Anonymous access remains intentionally login-free and non-production.
+- Local format/lint, 29 tests, evaluation, live-profile manifest validation, Compose configuration, presentation validation, and `git diff --check` passed.
+- The local Docker daemon is unavailable; CI remains responsible for the in-image boundary proof.
+- After the change reaches `main`, use the release workflow’s exact-SHA receipt to refresh `evidence/deployment/anonymous-live-demo.json`. Do not claim the new no-expiry revision is live until that receipt is available.
+- Regenerate Graphify after the authoritative revision is committed; the current graph predates this transition.
 
 ## Later protected-hosting gate
 
-Use single-tenant Microsoft Entra authentication, an owner-approved transactional proposal store, verified cross-replica single-use behavior, monitoring and alerting, and an owner-approved cost/load envelope before protected hosting. Publication does not convert this temporary anonymous demo into a production service.
+Use single-tenant Microsoft Entra authentication, an owner-approved transactional proposal store, verified cross-replica single-use behavior, monitoring and alerting, and an owner-approved cost/load envelope before protected hosting. Publication does not convert this anonymous live demo into a production service.
 
 ## Checkpoint 2026-07-24T05:30:15.531Z
 
