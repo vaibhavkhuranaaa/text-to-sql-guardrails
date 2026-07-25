@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "evidence_id": "m5-aggregate-readiness-2026-07-25",
+  "recorded_at_utc": "2026-07-25T19:54:52Z",
+  "classification": "private local bounded validation; not a public load, production-performance, or cost claim",
+  "provider_sample": {
+    "source_sha": "64aa8248467c0baf505b109d58031833bd8a85aa",
+    "completion_token_cap": 2048,
+    "attempted": 4,
+    "valid_guarded_proposals": 4,
+    "input_tokens_total": 760,
+    "output_tokens_total": 4685,
+    "observed_p95_latency_ms": 25079,
+    "monetary_cost": "Not calculated: no verified unit price or portal-cost observation is retained.",
+    "cost_boundary": "The fixed four-call envelope ended without additional provider traffic; the approved $24 optional-test stop threshold remains in force."
+  },
+  "local_readiness": {
+    "source": "scripts/run_private_m5_readiness.py",
+    "benchmark_digest": "26ee5956027812b39bc6f3b96fdf8f282e6de071a10cc9bd79dbedfd9bd8d02c",
+    "private_volume": {
+      "case_count": 7,
+      "passed": 7
+    },
+    "service": {
+      "requests": 12,
+      "workers": 3,
+      "trusted": 6,
+      "refused": 6,
+      "refusal_rate": 0.5,
+      "error_rate": 0.0,
+      "p50_latency_ms": 28.394,
+      "p95_latency_ms": 34.681,
+      "p99_latency_ms": 45.907,
+      "throughput_per_second": 51.846,
+      "duplicate_execution_count": 0
+    },
+    "approval_lifecycle": {
+      "safe_proposals": 3,
+      "policy_refusals": 1,
+      "approved_executions": 1,
+      "expired_approvals": 1,
+      "concurrent_approval_attempts": 2,
+      "duplicate_execution_count": 0
+    }
+  },
+  "container_boundary": {
+    "passed": true,
+    "method": "built local image verifier",
+    "observed": "fixture and aggregate evaluation evidence present; raw and approved artifacts absent"
+  },
+  "not_exercised": [
+    "public traffic",
+    "durable-store contention: not applicable to the M0-A ephemeral SQLite demo",
+    "scaling: M0-A remains zero-to-one replica"
+  ],
+  "disclosure": "Aggregate-only evidence. No questions, SQL, result rows, identifiers, per-request tokens, raw source rows, or environment values are retained. Local latency and throughput observations are not production SLO, capacity, or cost claims."
+}

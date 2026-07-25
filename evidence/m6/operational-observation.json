@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "id": "m6.operational-readiness",
+  "observedAt": "2026-07-25T21:57:52Z",
+  "environment": "existing Azure non-production Container App demo",
+  "classification": "aggregate-only operational configuration",
+  "notification": {
+    "actionGroup": "ag-text-sql-m6-owner",
+    "enabled": true,
+    "ownerReceiptConfirmed": true,
+    "recipient": "redacted"
+  },
+  "budget": {
+    "name": "text-sql-m6-monthly",
+    "currency": "USD",
+    "monthlyLimit": 30,
+    "notifications": [
+      { "kind": "actual", "thresholdPercent": 50, "thresholdUsd": 15 },
+      { "kind": "forecast", "thresholdPercent": 80, "thresholdUsd": 24 },
+      { "kind": "actual", "thresholdPercent": 100, "thresholdUsd": 30 }
+    ]
+  },
+  "alerts": [
+    {
+      "name": "sqr-text-sql-m6-stderr",
+      "kind": "aggregate stderr error count",
+      "severity": 2,
+      "evaluationWindow": "5m",
+      "threshold": "greater than zero",
+      "enabled": true
+    },
+    {
+      "name": "sqr-text-sql-m6-latency",
+      "kind": "aggregate latency average",
+      "severity": 3,
+      "evaluationWindow": "5m",
+      "threshold": "greater than 5000 ms",
+      "enabled": true
+    }
+  ],
+  "limitations": [
+    "No availability SLO, on-call rota, production claim, or public-load claim is established.",
+    "Application telemetry remains process-local and resets after restart or scale-to-zero.",
+    "A durable-state restore drill is not applicable under the M0-A ephemeral SQLite design."
+  ],
+  "excluded": [
+    "notification recipient", "log records", "query payloads", "request data", "result rows", "tokens", "environment values"
+  ]
+}

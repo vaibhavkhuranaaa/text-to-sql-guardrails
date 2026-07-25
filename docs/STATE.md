@@ -26,7 +26,10 @@ The demo has no end-user login. Azure managed identity is used only for the serv
 - SQLite proposal state lives under `/tmp`; it cannot safely coordinate replicas and is lost on restart.
 - The public fixture is intentionally small. The ignored local approved snapshot is never deployed.
 - There is no availability SLO, on-call rota, production authorization boundary, or real-customer data claim.
-- Resume Creator still has the previous approved project SHA. Portfolio Site and Portfolio OS are current; that consumer synchronization is not yet complete.
+- M7 consumer convergence passed. Portfolio Site, its generated GitHub index,
+  and Resume Creator all carry the live-verified source SHA
+  `64aa8248467c0baf505b109d58031833bd8a85aa`; Portfolio OS's consumer validator
+  reported no mismatch.
 
 ## M0 outcome
 
@@ -78,19 +81,65 @@ The demo has no end-user login. Azure managed identity is used only for the serv
 - The local M4 evaluation passed all seven checks. The bounded aggregate-only
   deployment observation is recorded in `evidence/m4/deployment-observation.json`;
   it retains the existing five-per-minute and 100-per-process limits unchanged.
-- M5 through M7 remain separately owner-gated.
+- M6 and M7 remain separately owner-gated.
 
 ## Next safe action
 
-M2 is skipped under M0-A and M4 is complete. The M5 local-only readiness
-candidate exercises private volume and bounded deterministic service concurrency
-without provider calls or public traffic. It is not a complete load envelope:
-approval expiry, durable contention, scaling, and paid model traffic remain
-blocked by the unapproved incremental-cost ceiling. Retain the existing proposal
+M2 is skipped under M0-A, and M4 through M7 are complete only within their
+documented bounded evidence scope. No further provider, public-load,
+durable-store, or scaling work is authorized. Retain the existing proposal
 limits unless the owner separately authorizes a policy change.
 
+## M5 bounded private provider sample
+
+- The owner approved the documented $30 incremental ceiling and $24 optional-test
+  stop threshold; no new resource or capacity is authorized.
+- Provider completions are capped at 2,048 tokens. Four isolated private calls
+  produced valid guarded proposals; aggregate usage was 760 input and 4,685
+  output tokens with observed p95 latency of 25,079 ms. The fixed four-call,
+  aggregate-only reproduction harness is `scripts/run_bounded_provider_m5.py`;
+  it must not be rerun without confirming the optional-test cost threshold.
+- The versioned local readiness harness now writes an ignored, aggregate-only
+  report. Its default no-provider run passed seven private-volume checks and
+  exercised 12 deterministic service requests at three workers, with six
+  trusted and six refused outcomes. It also reproduced one policy refusal, one
+  approved execution, one expiry refusal, and two simultaneous approval
+  attempts with zero duplicate executions.
+- This remains a bounded M5 slice, not a full load envelope: durable-store
+  contention is non-applicable to M0-A's ephemeral SQLite demo, scaling remains
+  unexercised at zero-to-one replica, and the local observation is not a public
+  performance or cost claim. M6 remains separately owner-gated.
+- The required local built-container data-boundary recheck passed: the fixture
+  and aggregate evaluation evidence were present, while raw and approved
+  artifacts were absent.
+- The versioned, redacted aggregate report is
+  `evidence/m5/aggregate-readiness.json`. It records only aggregate provider,
+  local-readiness, container-boundary, and caveat evidence; provider monetary
+  cost is deliberately not calculated without a verified portal observation or
+  unit price.
+- M5 is complete as a bounded, private evidence milestone. It does not justify
+  a public-load, durable-state, scaling, production-performance, or monetary
+  cost claim. M6 remains separately owner-gated.
+
+## M6 operational evidence
+
+- The owner authorized the redacted notification route and confirmed its receipt.
+  The existing target now has enabled action group `ag-text-sql-m6-owner`, the
+  `text-sql-m6-monthly` $30 monthly budget ($15 actual, $24 forecast optional
+  test stop, and $30 actual), plus enabled five-minute aggregate stderr and
+  latency scheduled-query alerts.
+- `docs/m6-operational-runbook.md` and
+  `scripts/verify_m6_operational_readiness.py` document and verify the
+  status-only health observation, process-local telemetry limitation,
+  degraded-proposal-store behavior, rollback procedure, and M0-A's
+  non-applicable durable-state restore drill.
+- `evidence/m6/operational-observation.json` is redacted aggregate-only
+  configuration evidence. M6 adds no capacity, durable state, login, public
+  load, availability target, on-call rota, or production claim.
+
 No new Azure resource, paid capacity, raw IBM data download, capacity change,
-user login, or Resume Creator change is authorized. The default remains one
-replica with ephemeral SQLite state.
+or user login is authorized. M7 permits only the explicitly approved Resume
+Creator catalog synchronization; the default remains one replica with ephemeral
+SQLite state.
 
 See `docs/scale-ready-milestones.md` for the authoritative scope, decisions, milestones, exits, and owner approvals. See `docs/HANDOFF.md` for the concise continuation instructions.
