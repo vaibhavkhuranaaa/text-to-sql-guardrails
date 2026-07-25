@@ -51,9 +51,12 @@ status observation in `evidence/m4/deployment-observation.json` has zero
 aggregate traffic/model calls and leaves the five-per-minute / 100-per-process
 limits unchanged.
 
-The next milestone is M5 and requires separate explicit owner approval. Do not
-provision resources, alter capacity, add login, start a load run, or edit Resume
-Creator.
+The M5 local-only readiness candidate is permitted because it makes no provider
+or public requests. It records private-volume and deterministic service results
+only. Do not claim a full M5 envelope or run expiry, durable-contention,
+scaling, provider, or public-load work until the owner approves a specific
+incremental-cost envelope. Do not provision resources, alter capacity, add
+login, or edit Resume Creator.
 
 ## Required verification
 
