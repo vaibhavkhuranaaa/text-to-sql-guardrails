@@ -258,7 +258,7 @@
     },
     {
       "id": "operational.m6-alert-readiness",
-      "kind": "operational",
+      "kind": "deployment",
       "claim": "The anonymous non-production target has a redacted owner notification route, bounded budget thresholds, and aggregate stderr and latency alerts.",
       "source": "evidence/m6/operational-observation.json",
       "method": "Read-only Azure configuration observation with recipient and log data excluded",
@@ -267,7 +267,7 @@
       "observedAt": "2026-07-25T21:57:52Z",
       "environment": "Azure non-production demo",
       "classification": "aggregate-only operational configuration",
-      "execution": "configuration observation",
+      "execution": "live",
       "caveat": "Budgets do not prevent spend; alerts and process-local telemetry do not establish availability, SLO, or production readiness."
     }
   ],
