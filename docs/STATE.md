@@ -4,8 +4,8 @@
 
 - Lifecycle: `maintained` portfolio project.
 - Deployment: anonymous, indefinite, non-production `live` demo on the existing Azure Container App.
-- Last independently live-verified application release: `36156cc825c0245e0bf803c2aeb75718998d7126` on `main`.
-- Deployment verification: GitHub Actions workflow `30177660324` deployed and verified that exact release SHA.
+- Last independently live-verified application release: `c5024f82af435805c3411344bab0bcbd8fa34378` on `main`.
+- Deployment verification: GitHub Actions workflow `30222770159` deployed and verified that exact release SHA.
 - Portfolio publication: the public site verified and synchronized the project; its tracked catalog now records the same source SHA.
 - Public endpoint: `https://ca-text-sql-guardrails-dev.whitesky-593b85cb.eastus.azurecontainerapps.io`.
 
@@ -28,7 +28,7 @@ The demo has no end-user login. Azure managed identity is used only for the serv
 - There is no availability SLO, on-call rota, production authorization boundary, or real-customer data claim.
 - M7 consumer convergence passed. Portfolio Site, its generated GitHub index,
   and Resume Creator all carry the live-verified source SHA
-  `64aa8248467c0baf505b109d58031833bd8a85aa`; Portfolio OS's consumer validator
+  `c5024f82af435805c3411344bab0bcbd8fa34378`; Portfolio OS's consumer validator
   reported no mismatch.
 
 ## M0 outcome
@@ -81,7 +81,7 @@ The demo has no end-user login. Azure managed identity is used only for the serv
 - The local M4 evaluation passed all seven checks. The bounded aggregate-only
   deployment observation is recorded in `evidence/m4/deployment-observation.json`;
   it retains the existing five-per-minute and 100-per-process limits unchanged.
-- M6 and M7 remain separately owner-gated.
+- M6 and M7 are complete within their documented bounded scope.
 
 ## Next safe action
 
@@ -138,8 +138,7 @@ limits unless the owner separately authorizes a policy change.
   load, availability target, on-call rota, or production claim.
 
 No new Azure resource, paid capacity, raw IBM data download, capacity change,
-or user login is authorized. M7 permits only the explicitly approved Resume
-Creator catalog synchronization; the default remains one replica with ephemeral
+or user login is authorized. The default remains one replica with ephemeral
 SQLite state.
 
 See `docs/scale-ready-milestones.md` for the authoritative scope, decisions, milestones, exits, and owner approvals. See `docs/HANDOFF.md` for the concise continuation instructions.

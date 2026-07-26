@@ -2,7 +2,7 @@
 
 ## Start here
 
-Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. The last independently live-verified application release is `36156cc825c0245e0bf803c2aeb75718998d7126` (workflow `30177660324`).
+Read `AGENTS.md`, `docs/STATE.md`, this file, `docs/scale-ready-milestones.md`, `portfolio/project.json`, and the relevant fresh `graphify-out/` query before broad inspection. The last independently live-verified application release is `c5024f82af435805c3411344bab0bcbd8fa34378` (workflow `30222770159`).
 
 The demo is live, anonymous, indefinite, non-production, scale-to-zero, and backed only by the committed hand-authored synthetic fixture. Do not add login, caller authorization, real customer data, raw data to the image, a public database endpoint, or a production/SLA claim.
 
@@ -118,7 +118,7 @@ public load, availability target, on-call rota, or production claim was added.
 
 The owner explicitly authorized Resume Creator synchronization. Portfolio Site
 re-verified and projected source SHA
-`64aa8248467c0baf505b109d58031833bd8a85aa`; Resume Creator imported that
+`c5024f82af435805c3411344bab0bcbd8fa34378`; Resume Creator imported that
 approved catalog and refreshed only the matching evidence-backed reviewed
 references. Portfolio Site tests, lint, and build passed; Resume Creator catalog
 validation, six tests, lint, and build passed; and Portfolio OS reported no
